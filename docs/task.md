@@ -1,0 +1,7 @@
+- [x] Configure Tailwind v4 Theme in index.css
+- [x] Refactor Layout Component (`src/components/Layout.jsx`)
+- [x] Create Dashboard Page (`src/pages/Dashboard.jsx`)
+- [x] Create History Page (`src/pages/History.jsx`)
+- [x] Create Settings Page (`src/pages/Settings.jsx`)
+- [x] Integrate State and Routing in `App.jsx`
+- [x] Deploy to Firebase Hosting
