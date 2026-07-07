@@ -1,76 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  --color-tertiary-fixed: #ffdbd1;
-  --color-tertiary: #330700;
-  --color-surface-container-lowest: #ffffff;
-  --color-on-tertiary-fixed: #3b0900;
-  --color-tertiary-fixed-dim: #ffb5a0;
-  --color-on-secondary-container: #006573;
-  --color-on-surface: #181c1e;
-  --color-status-heating: #FF5722;
-  --color-surface-dim: #d7dadc;
-  --color-status-cooling: #00BCD4;
-  --color-on-primary-container: #8293b8;
-  --color-on-error-container: #93000a;
-  --color-primary-fixed-dim: #b6c6ef;
-  --color-surface-container: #ebeef0;
-  --color-surface-container-low: #f1f4f6;
-  --color-on-tertiary-fixed-variant: #862200;
-  --color-surface-card: #FFFFFF;
-  --color-on-secondary-fixed-variant: #004e59;
-  --color-on-background: #181c1e;
-  --color-inverse-surface: #2d3133;
-  --color-on-secondary-fixed: #001f25;
-  --color-on-primary-fixed-variant: #364768;
-  --color-outline: #75777f;
-  --color-on-tertiary-container: #ff5c29;
-  --color-text-secondary: #64748B;
-  --color-surface-container-highest: #e0e3e5;
-  --color-surface-container-high: #e5e9eb;
-  --color-status-eco: #4CAF50;
-  --color-primary-fixed: #d8e2ff;
-  --color-surface-variant: #e0e3e5;
-  --color-secondary-container: #58e6ff;
-  --color-surface-tint: #4e5e81;
-  --color-on-surface-variant: #44474e;
-  --color-surface: #f7fafc;
-  --color-tertiary-container: #571200;
-  --color-inverse-primary: #b6c6ef;
-  --color-primary: #031635;
-  --color-error: #ba1a1a;
-  --color-on-primary-fixed: #081b3a;
-  --color-primary-container: #1a2b4b;
-  --color-secondary-fixed-dim: #44d8f1;
-  --color-on-secondary: #ffffff;
-  --color-surface-bright: #f7fafc;
-  --color-error-container: #ffdad6;
-  --color-secondary: #006876;
-  --color-on-error: #ffffff;
-  --color-inverse-on-surface: #eef1f3;
   --color-background: #f7fafc;
-  --color-secondary-fixed: #a1efff;
+  --color-error: #ba1a1a;
+  --color-error_container: #ffdad6;
+  --color-inverse_on_surface: #eef1f3;
+  --color-inverse_primary: #b6c6ef;
+  --color-inverse_surface: #2d3133;
+  --color-on_background: #181c1e;
+  --color-on_error: #ffffff;
+  --color-on_error_container: #93000a;
+  --color-on_primary: #ffffff;
+  --color-on_primary_container: #8293b8;
+  --color-on_primary_fixed: #081b3a;
+  --color-on_primary_fixed_variant: #364768;
+  --color-on_secondary: #ffffff;
+  --color-on_secondary_container: #006573;
+  --color-on_secondary_fixed: #001f25;
+  --color-on_secondary_fixed_variant: #004e59;
+  --color-on_surface: #181c1e;
+  --color-on_surface_variant: #44474e;
+  --color-on_tertiary: #ffffff;
+  --color-on_tertiary_container: #ff5c29;
+  --color-on_tertiary_fixed: #3b0900;
+  --color-on_tertiary_fixed_variant: #862200;
+  --color-outline: #75777f;
+  --color-outline_variant: #c5c6cf;
+  --color-primary: #031635;
+  --color-primary_container: #1a2b4b;
+  --color-primary_fixed: #d8e2ff;
+  --color-primary_fixed_dim: #b6c6ef;
+  --color-secondary: #006876;
+  --color-secondary_container: #58e6ff;
+  --color-secondary_fixed: #a1efff;
+  --color-secondary_fixed_dim: #44d8f1;
+  --color-status-cooling: #00BCD4;
+  --color-status-eco: #4CAF50;
+  --color-status-heating: #FF5722;
+  --color-surface: #f7fafc;
+  --color-surface-card: #FFFFFF;
+  --color-surface_bright: #f7fafc;
+  --color-surface_container: #ebeef0;
+  --color-surface_container_high: #e5e9eb;
+  --color-surface_container_highest: #e0e3e5;
+  --color-surface_container_low: #f1f4f6;
+  --color-surface_container_lowest: #ffffff;
+  --color-surface_dim: #d7dadc;
+  --color-surface_tint: #4e5e81;
+  --color-surface_variant: #e0e3e5;
+  --color-tertiary: #330700;
+  --color-tertiary_container: #571200;
+  --color-tertiary_fixed: #ffdbd1;
+  --color-tertiary_fixed_dim: #ffb5a0;
   --color-text-primary: #1A2B4B;
-  --color-on-tertiary: #ffffff;
-  --color-outline-variant: #c5c6cf;
-  --color-on-primary: #ffffff;
-
+  --color-text-secondary: #64748B;
+  --spacing-base: 8px;
   --spacing-container-padding: 24px;
-  --spacing-stack-lg: 24px;
   --spacing-gutter: 16px;
   --spacing-stack-sm: 4px;
-  --spacing-base: 8px;
   --spacing-stack-md: 12px;
-
-  --font-inter: 'Inter', sans-serif;
-  --font-headline-lg: 'Inter', sans-serif;
-  --font-label-md: 'Inter', sans-serif;
-  --font-display-temp: 'Inter', sans-serif;
-  --font-headline-lg-mobile: 'Inter', sans-serif;
-  --font-body-lg: 'Inter', sans-serif;
-  --font-label-sm: 'Inter', sans-serif;
-  --font-body-md: 'Inter', sans-serif;
-  --font-headline-md: 'Inter', sans-serif;
+  --spacing-stack-lg: 24px;
 }
 
 /* Custom Base Styles */
@@ -85,10 +74,76 @@ body {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
+/* === Lumina Home Typography Scale (from Stitch Design System) === */
+
+.text-display-temp {
+  font-family: 'Inter', sans-serif;
+  font-size: 64px;
+  line-height: 72px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.text-headline-lg {
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-headline-lg-mobile {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+.text-headline-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.text-body-lg {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
+}
+
+.text-body-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.text-label-md {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.text-label-sm {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+/* === Elevation & Cards === */
+
 .glass-card {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .lift-effect {
@@ -103,3 +158,4 @@ body {
 .chart-container {
   background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(241,244,246,1) 100%);
 }
+
