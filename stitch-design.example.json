@@ -1,0 +1,28 @@
+{
+  "designSystems": [
+    {
+      "designSystem": {
+        "displayName": "Lumina Home",
+        "theme": {
+          "colorMode": "LIGHT",
+          "font": "INTER",
+          "roundness": "ROUND_EIGHT",
+          "customColor": "#1a2b4b",
+          "namedColors": {
+            "background": "#f7fafc",
+            "primary": "#031635",
+            "secondary": "#006876",
+            "status-cooling": "#00BCD4",
+            "status-heating": "#FF5722",
+            "status-eco": "#4CAF50"
+          },
+          "spacing": {
+            "base": "8px",
+            "gutter": "16px",
+            "container-padding": "24px"
+          }
+        }
+      }
+    }
+  ]
+}
