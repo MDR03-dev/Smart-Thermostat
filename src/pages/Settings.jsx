@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Settings = ({ sursa, handleSursaChange, putere, setPutere, pret, setPret }) => {
   const [pragInf, setPragInf] = useState(19.5);
@@ -7,9 +7,11 @@ const Settings = ({ sursa, handleSursaChange, putere, setPutere, pret, setPret }
 
   const handleSave = (e) => {
     e.preventDefault();
-    setSaveStatus('SALVAT');
-    setTimeout(() => setSaveStatus(''), 3000);
-    // Here we would actually save to Firebase config/ if needed
+    setSaveStatus('saving');
+    setTimeout(() => {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus(''), 2000);
+    }, 1200);
   };
 
   return (
@@ -24,32 +26,34 @@ const Settings = ({ sursa, handleSursaChange, putere, setPutere, pret, setPret }
                 <div className="bg-primary-fixed p-3 rounded-lg text-primary">
                   <span className="material-symbols-outlined">thermostat</span>
                 </div>
-                <h4 className="font-headline-md text-headline-md text-primary">Setări Sistem (Histerezis)</h4>
+                <h4 className="text-headline-md text-primary">Setări Sistem (Histerezis)</h4>
               </div>
               
               <div className="space-y-stack-lg">
                 <div className="space-y-2">
-                  <label className="block font-label-md text-on-surface">Prag inferior (Pornire încălzire)</label>
+                  <label className="block text-label-md text-on-surface-variant" htmlFor="low-threshold">Prag inferior (Pornire încălzire)</label>
                   <div className="relative">
                     <input 
+                      id="low-threshold"
                       type="number" step="0.1" value={pragInf} onChange={e => setPragInf(Number(e.target.value))}
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-md text-on-surface font-body-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" 
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none pr-12" 
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">°C</span>
                   </div>
-                  <p className="text-label-sm text-text-secondary italic">Sistemul va porni automat sub această valoare.</p>
+                  <p className="text-[11px] text-on-surface-variant px-1 italic">Sistemul va porni automat sub această valoare.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block font-label-md text-on-surface">Prag superior (Oprire încălzire)</label>
+                  <label className="block text-label-md text-on-surface-variant" htmlFor="high-threshold">Prag superior (Oprire încălzire)</label>
                   <div className="relative">
                     <input 
+                      id="high-threshold"
                       type="number" step="0.1" value={pragSup} onChange={e => setPragSup(Number(e.target.value))}
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-md text-on-surface font-body-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" 
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none pr-12" 
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">°C</span>
                   </div>
-                  <p className="text-label-sm text-text-secondary italic">Sistemul va opri încălzirea când atinge această valoare.</p>
+                  <p className="text-[11px] text-on-surface-variant px-1 italic">Sistemul va opri încălzirea când atinge această valoare.</p>
                 </div>
               </div>
             </div>
@@ -57,18 +61,19 @@ const Settings = ({ sursa, handleSursaChange, putere, setPutere, pret, setPret }
             {/* Financial Settings Card */}
             <div className="bg-surface-card p-stack-lg rounded-xl card-shadow border border-outline-variant hover:border-secondary transition-colors group">
               <div className="flex items-center gap-stack-md mb-stack-lg">
-                <div className="bg-secondary-container p-3 rounded-lg text-on-secondary-container">
+                <div className="bg-secondary-fixed p-3 rounded-lg text-on-secondary-container">
                   <span className="material-symbols-outlined">payments</span>
                 </div>
-                <h4 className="font-headline-md text-headline-md text-primary">Configurare Financiară</h4>
+                <h4 className="text-headline-md text-primary">Configurare Financiară</h4>
               </div>
               
               <div className="space-y-stack-lg">
                 <div className="space-y-2">
-                  <label className="block font-label-md text-on-surface">Sursă Energie</label>
+                  <label className="block text-label-md text-on-surface-variant" htmlFor="energy-source">Sursă Energie</label>
                   <select 
+                    id="energy-source"
                     value={sursa} onChange={handleSursaChange}
-                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-md text-on-surface font-body-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none appearance-none"
+                    className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none appearance-none"
                   >
                     <option value="Gaz">Gaz (Metan)</option>
                     <option value="Electric">Electric (C.T.)</option>
@@ -77,49 +82,66 @@ const Settings = ({ sursa, handleSursaChange, putere, setPutere, pret, setPret }
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block font-label-md text-on-surface">Tarif Energie (Lei/kWh)</label>
+                  <label className="block text-label-md text-on-surface-variant" htmlFor="energy-tariff">Tarif Energie (Lei/kWh)</label>
                   <div className="relative">
                     <input 
+                      id="energy-tariff"
                       type="number" step="0.01" value={pret} onChange={e => setPret(Number(e.target.value))}
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-md text-on-surface font-body-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" 
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none pr-12" 
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">Lei</span>
                   </div>
-                  <p className="text-label-sm text-text-secondary italic">Folosit pentru calcularea costurilor lunare estimate.</p>
+                  <p className="text-[11px] text-on-surface-variant px-1 italic">Folosit pentru calcularea costurilor lunare estimate.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block font-label-md text-on-surface">Putere Nominală Echipament (kW)</label>
+                  <label className="block text-label-md text-on-surface-variant" htmlFor="nominal-power">Putere Nominală Echipament (W)</label>
                   <div className="relative">
                     <input 
+                      id="nominal-power"
                       type="number" step="0.5" value={putere} onChange={e => setPutere(Number(e.target.value))}
-                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-md text-on-surface font-body-lg focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none" 
+                      className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary focus:border-secondary transition-all outline-none pr-12" 
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">kW</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">W</span>
                   </div>
-                  <p className="text-label-sm text-text-secondary italic">Puterea de consum maximă a sistemului de climatizare.</p>
+                  <p className="text-[11px] text-on-surface-variant px-1 italic">Puterea de consum maximă a sistemului de climatizare.</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-status-eco/10 border-l-4 border-status-eco p-stack-md rounded-r-lg flex justify-between items-center">
+          {/* Eco Banner */}
+          <div className="bg-surface-container-high p-stack-md rounded-xl flex flex-col md:flex-row items-center justify-between gap-stack-md border-l-4 border-status-eco">
             <div className="flex items-center gap-stack-md">
-              <span className="material-symbols-outlined text-status-eco">eco</span>
+              <span className="material-symbols-outlined text-status-eco" style={{ fontVariationSettings: "'FILL' 1" }}>eco</span>
               <div>
-                <h5 className="font-label-md font-bold text-on-surface">Optimizare Eco-Smart</h5>
-                <p className="text-label-sm text-text-secondary">Setările actuale economisesc aproximativ 12% energie față de luna trecută.</p>
+                <p className="text-label-md text-primary font-bold">Optimizare Eco-Smart</p>
+                <p className="text-label-sm text-on-surface-variant">Setările actuale economisesc aproximativ 12% energie față de luna trecută.</p>
               </div>
             </div>
-            <span className="text-xs font-bold text-status-eco tracking-widest uppercase">
-              STATUS<br/>OPTIMIZAT
-            </span>
+            <div className="text-right hidden md:block">
+              <span className="text-label-sm text-on-surface-variant uppercase tracking-wider">Status</span>
+              <p className="font-bold text-status-eco">OPTIMIZAT</p>
+            </div>
           </div>
 
-          <div className="flex justify-end pt-stack-md">
-            <button type="submit" className="bg-primary text-on-primary px-8 py-4 rounded-xl font-headline-md text-headline-md flex items-center gap-stack-md hover:bg-primary-container hover:text-white transition-colors shadow-lg active:scale-95">
-              <span className="material-symbols-outlined">save</span>
-              {saveStatus === 'SALVAT' ? 'Salvat cu succes' : 'Salvează Configurarea'}
+          {/* Save Button */}
+          <div className="pt-stack-lg flex justify-end">
+            <button 
+              type="submit" 
+              disabled={saveStatus === 'saving'}
+              className={`w-full md:w-auto px-12 py-4 rounded-xl font-bold flex items-center justify-center gap-stack-md shadow-lg active:scale-[0.98] transition-all hover:brightness-110 ${
+                saveStatus === 'saved' 
+                  ? 'bg-status-eco text-white' 
+                  : saveStatus === 'saving'
+                    ? 'bg-primary/80 text-on-primary pointer-events-none'
+                    : 'bg-primary text-on-primary'
+              }`}
+            >
+              <span className={`material-symbols-outlined ${saveStatus === 'saving' ? 'animate-spin' : ''}`}>
+                {saveStatus === 'saved' ? 'check_circle' : saveStatus === 'saving' ? 'refresh' : 'save'}
+              </span>
+              {saveStatus === 'saved' ? 'Configurație Salvată' : saveStatus === 'saving' ? 'Se salvează...' : 'Salvează Configurarea'}
             </button>
           </div>
         </form>

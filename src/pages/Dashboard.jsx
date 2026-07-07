@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Dashboard = ({ 
   currentTemp, currentHumidity, targetTemp, handleAdjustSetpoint,
   relay1Status, relay1Command, handleToggleRelay1,
@@ -30,10 +28,10 @@ const Dashboard = ({
               <span className="text-label-sm text-on-surface-variant font-medium">Interior</span>
             </div>
             <div className="mt-stack-md flex items-baseline gap-base">
-              <span className="font-display-temp text-display-temp text-primary">
+              <span className="text-display-temp text-primary">
                 {currentTemp !== null ? currentTemp.toFixed(1) : '--'}
               </span>
-              <span className="font-headline-md text-headline-md text-on-surface-variant">°C</span>
+              <span className="text-headline-md text-on-surface-variant">°C</span>
             </div>
             <p className="text-label-sm text-on-surface-variant mt-stack-sm">Ideal: 22°C - 24°C</p>
           </div>
@@ -45,10 +43,10 @@ const Dashboard = ({
               <span className="text-label-sm text-on-surface-variant font-medium">Umiditate</span>
             </div>
             <div className="mt-stack-md flex items-baseline gap-base">
-              <span className="font-display-temp text-display-temp text-primary">
+              <span className="text-display-temp text-primary">
                 {currentHumidity !== null ? currentHumidity.toFixed(1) : '--'}
               </span>
-              <span className="font-headline-md text-headline-md text-on-surface-variant">%</span>
+              <span className="text-headline-md text-on-surface-variant">%</span>
             </div>
             <p className="text-label-sm text-on-surface-variant mt-stack-sm">Zonă de confort optimă</p>
           </div>
@@ -61,10 +59,10 @@ const Dashboard = ({
             </div>
             <div className="mt-stack-md flex flex-col">
               <div className="flex items-baseline gap-base">
-                <span className="font-display-temp text-display-temp text-primary">
+                <span className="text-display-temp text-primary">
                   {relay1Status ? '824' : relay2Status ? '1200' : '5'}
                 </span>
-                <span className="font-headline-md text-headline-md text-on-surface-variant">W</span>
+                <span className="text-headline-md text-on-surface-variant">W</span>
               </div>
               <span className="text-label-sm font-bold text-on-surface-variant">
                 {relay1Status ? '3.65' : relay2Status ? '5.20' : '0.02'} A
@@ -79,7 +77,7 @@ const Dashboard = ({
           {/* Temp Control Widget */}
           <div className="lg:col-span-7 glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center justify-center relative overflow-hidden">
             <div className={`absolute top-0 left-0 w-full h-1 opacity-50 ${relay1Status ? 'bg-status-heating' : relay2Status ? 'bg-status-cooling' : 'bg-surface-variant'}`}></div>
-            <h3 className="font-headline-md text-headline-md text-primary mb-stack-lg self-start">Control Climă</h3>
+            <h3 className="text-headline-md text-primary mb-stack-lg self-start">Control Climă</h3>
             
             <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
               {/* Circular Progress Visual */}
@@ -89,7 +87,7 @@ const Dashboard = ({
               
               <div className="relative z-10 flex flex-col items-center transition-transform">
                 <span className="text-label-md text-on-surface-variant font-bold uppercase tracking-widest">Setpoint</span>
-                <div className={`font-display-temp text-display-temp transition-colors ${getTempColorClass(targetTemp)}`}>
+                <div className={`text-display-temp transition-colors ${getTempColorClass(targetTemp)}`}>
                   {targetTemp.toFixed(1)}
                 </div>
                 <span className="text-headline-md text-on-surface-variant">° Celsius</span>
@@ -126,7 +124,7 @@ const Dashboard = ({
           <div className="lg:col-span-5 flex flex-col gap-gutter">
             {/* Scenarios Section */}
             <div className="glass-card p-stack-lg rounded-xl shadow-sm flex flex-col gap-stack-md flex-1">
-              <h3 className="font-headline-md text-headline-md text-primary">Scenarii</h3>
+              <h3 className="text-headline-md text-primary">Scenarii</h3>
               <div className="flex flex-col gap-stack-sm h-full justify-between">
                 <button 
                   onClick={() => handleApplyPreset("Acasă", 22.0, 24.0)} 
@@ -165,21 +163,82 @@ const Dashboard = ({
             <div className="glass-card p-stack-lg rounded-xl shadow-sm border border-outline-variant bg-surface-container-lowest">
               <div className="flex items-center gap-base mb-stack-md">
                 <span className="material-symbols-outlined text-on-secondary-container">payments</span>
-                <h3 className="font-headline-md text-headline-md text-primary">Analiză Financiară</h3>
+                <h3 className="text-headline-md text-primary">Analiză Financiară</h3>
               </div>
               <div className="space-y-stack-md">
                 <div className="bg-surface-container p-stack-md rounded-lg">
                   <p className="text-label-sm text-on-surface-variant">Cost estimat curent (Lună)</p>
                   <p className="text-headline-lg text-primary font-black">{costCalculat ? costCalculat.toFixed(2) : '0.00'} Lei</p>
                 </div>
+                <div>
+                  <label className="text-label-sm text-on-surface-variant block mb-1">Profil Tarifar</label>
+                  <select className="w-full bg-surface-container-high border-none rounded-lg text-label-md text-on-surface py-stack-md px-base focus:ring-2 focus:ring-primary">
+                    <option>Standard</option>
+                    <option>Noapte (Redus)</option>
+                    <option defaultValue>Eco Plus</option>
+                  </select>
+                </div>
                 <div className="flex items-center gap-base text-status-eco">
                   <span className="material-symbols-outlined text-sm">trending_down</span>
-                  <span className="text-xs font-medium">Sistem optimizat ECO</span>
+                  <span className="text-xs font-medium">Cu 12% mai puțin față de luna trecută</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* History Section - Istoric 24h */}
+        <div className="glass-card p-stack-lg rounded-xl shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-stack-lg gap-gutter">
+            <div>
+              <h3 className="text-headline-md text-primary">Istoric 24h</h3>
+              <p className="text-label-sm text-on-surface-variant">Monitorizare parametri mediu și consum</p>
+            </div>
+            <div className="flex bg-surface-container rounded-lg p-1">
+              <button className="px-base py-1 text-xs font-bold bg-white rounded shadow-sm text-primary">Temperatură</button>
+              <button className="px-base py-1 text-xs font-medium text-on-surface-variant hover:text-primary">Consum</button>
+            </div>
+          </div>
+          <div className="h-64 md:h-80 w-full bg-surface-container-low rounded-xl border border-dashed border-outline-variant flex items-center justify-center relative overflow-hidden group">
+            <div className="absolute inset-0 opacity-20 pointer-events-none">
+              <div className="w-full h-full" style={{ backgroundImage: 'linear-gradient(90deg, transparent 49%, #ccc 50%, transparent 51%), linear-gradient(0deg, transparent 49%, #ccc 50%, transparent 51%)', backgroundSize: '40px 40px' }}></div>
+            </div>
+            <div className="flex flex-col items-center gap-base z-10">
+              <div className="flex items-center justify-center p-stack-lg bg-surface-card rounded-full shadow-lg group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-primary text-4xl animate-pulse">query_stats</span>
+              </div>
+              <span className="text-label-md text-on-surface-variant italic">Se încarcă Chart.js...</span>
+            </div>
+            {/* Decorative Spline Lines */}
+            <svg className="absolute bottom-0 left-0 w-full h-1/2 opacity-30" preserveAspectRatio="none" viewBox="0 0 1000 100">
+              <path d="M0,80 Q100,20 200,60 T400,40 T600,80 T800,30 T1000,70" fill="none" stroke="#00BCD4" strokeLinecap="round" strokeWidth="4"></path>
+              <path d="M0,60 Q150,90 300,50 T600,20 T900,60 T1000,40" fill="none" stroke="#FF5722" strokeDasharray="5 5" strokeWidth="2"></path>
+            </svg>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-stack-lg">
+            <div className="flex flex-col">
+              <span className="text-xs text-on-surface-variant font-medium">Max Temp</span>
+              <span className="text-headline-md text-primary font-bold">
+                {currentTemp !== null ? (currentTemp + 2.7).toFixed(1) : '26.1'}°C
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs text-on-surface-variant font-medium">Min Temp</span>
+              <span className="text-headline-md text-primary font-bold">
+                {currentTemp !== null ? (currentTemp - 3.6).toFixed(1) : '19.8'}°C
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs text-on-surface-variant font-medium">Consum Total</span>
+              <span className="text-headline-md text-primary font-bold">12.4 kWh</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs text-on-surface-variant font-medium">Economie Eco</span>
+              <span className="text-headline-md text-status-eco font-bold">2.1 Lei</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   );

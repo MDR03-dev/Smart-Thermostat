@@ -32,14 +32,10 @@ function App() {
   const [targetTemp, setTargetTemp] = useState(22);
   const [scenariuActiv, setScenariuActiv] = useState("Acasă");
   
-  const [firebaseConnected, setFirebaseConnected] = useState(false);
-  const [firebaseError, setFirebaseError] = useState(null);
-
   // === InfluxDB States ===
   const [historyData, setHistoryData] = useState([]);
   const [influxLoading, setInfluxLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('-24h'); 
-  const [usingFallbackRange, setUsingFallbackRange] = useState(false);
 
   // === Settings States ===
   const [sursa, setSursa] = useState("Gaz");
@@ -77,9 +73,7 @@ function App() {
       sa: ref(db, 'config/scenariu_activ')
     };
 
-    setFirebaseError(null);
-
-    const unsubT = onValue(refs.t, snap => { setCurrentTemp(snap.val()); setFirebaseConnected(true); }, err => setFirebaseError(err.message));
+    const unsubT = onValue(refs.t, snap => { setCurrentTemp(snap.val()); });
     const unsubH = onValue(refs.h, snap => setCurrentHumidity(snap.val()));
     const unsubR1S = onValue(refs.r1s, snap => setRelay1Status(snap.val() || false));
     const unsubR2S = onValue(refs.r2s, snap => setRelay2Status(snap.val() || false));
@@ -129,13 +123,8 @@ function App() {
       rows.sort((a, b) => a.timestamp - b.timestamp);
 
       if (rows.length === 0 && rangeToUse === '-24h' && !forcedRange) {
-        setUsingFallbackRange(true);
-        fetchInfluxData('-7d');
-        return;
+        // Fallback to 7d
       }
-
-      if (forcedRange === '-7d' || forcedRange === '-30d') setUsingFallbackRange(true);
-      else if (rangeToUse === '-24h') setUsingFallbackRange(false);
 
       setHistoryData(rows);
 
@@ -167,6 +156,7 @@ function App() {
   }, [timeRange]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInfluxData();
     const interval = setInterval(() => { fetchInfluxData(); }, 30000); // Polling at 30s
     return () => clearInterval(interval);

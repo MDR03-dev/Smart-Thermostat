@@ -1,4 +1,3 @@
-import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 
@@ -8,8 +7,8 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
       <div className="max-w-7xl mx-auto pb-stack-lg">
         <header className="mb-stack-lg flex flex-col md:flex-row justify-between md:items-end gap-4">
           <div>
-            <h1 className="font-headline-lg text-headline-lg text-primary">Istoric & KPI</h1>
-            <p className="text-text-secondary font-body-md">Analiza performanței sistemului smart Lumina</p>
+            <h1 className="text-headline-lg text-primary">Istoric &amp; KPI</h1>
+            <p className="text-text-secondary text-body-md">Analiza performanței sistemului smart Lumina</p>
           </div>
           <div className="flex gap-2 bg-surface-container p-1 rounded-lg self-start md:self-end">
             <button 
@@ -38,9 +37,9 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
           {/* KPI 1: Temperatura Medie */}
           <div className="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between">
             <div>
-              <p className="text-text-secondary font-label-md mb-2">Temperatura medie {timeRange === '-24h' ? 'azi' : 'perioadă'}</p>
-              <h3 className="font-display-temp text-[40px] text-primary leading-none">{stats.avgTemp.toFixed(1)}°C</h3>
-              <div className="flex items-center gap-1 mt-3 text-status-eco font-label-sm">
+              <p className="text-text-secondary text-label-md mb-2">Temperatura medie {timeRange === '-24h' ? 'azi' : 'perioadă'}</p>
+              <h3 className="text-[40px] text-primary leading-none font-semibold">{stats.avgTemp.toFixed(1)}°C</h3>
+              <div className="flex items-center gap-1 mt-3 text-status-eco text-label-sm">
                 <span className="material-symbols-outlined text-[16px]">trending_down</span>
                 Optimizat
               </div>
@@ -53,9 +52,9 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
           {/* KPI 2: Consum Total */}
           <div className="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between border-l-4 border-l-status-cooling">
             <div>
-              <p className="text-text-secondary font-label-md mb-2">Cost estimat {timeRange === '-24h' ? 'azi' : 'perioadă'}</p>
-              <h3 className="font-display-temp text-[40px] text-primary leading-none">{costCalculat.toFixed(1)} Lei</h3>
-              <div className="flex items-center gap-1 mt-3 text-status-heating font-label-sm">
+              <p className="text-text-secondary text-label-md mb-2">Cost estimat {timeRange === '-24h' ? 'azi' : 'perioadă'}</p>
+              <h3 className="text-[40px] text-primary leading-none font-semibold">{costCalculat.toFixed(1)} Lei</h3>
+              <div className="flex items-center gap-1 mt-3 text-status-heating text-label-sm">
                 <span className="material-symbols-outlined text-[16px]">trending_up</span>
                 Analiză tarif
               </div>
@@ -68,13 +67,13 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
           {/* KPI 3: Timp Functionare */}
           <div className="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between">
             <div>
-              <p className="text-text-secondary font-label-md mb-2">Timp funcționare</p>
-              <h3 className="font-display-temp text-[40px] text-primary leading-none">
+              <p className="text-text-secondary text-label-md mb-2">Timp funcționare</p>
+              <h3 className="text-[40px] text-primary leading-none font-semibold">
                 {stats.tOnMinutes >= 60 ? `${Math.floor(stats.tOnMinutes/60)}h ${Math.round(stats.tOnMinutes%60)}m` : `${Math.round(stats.tOnMinutes)}m`}
               </h3>
-              <div className="flex items-center gap-1 mt-3 text-text-secondary font-label-sm">
+              <div className="flex items-center gap-1 mt-3 text-text-secondary text-label-sm">
                 <span className="material-symbols-outlined text-[16px]">schedule</span>
-                Sistem activ control
+                Sistem activ continuu
               </div>
             </div>
             <div className="bg-tertiary-fixed p-3 rounded-xl text-tertiary">
@@ -90,8 +89,8 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
           <div className="lg:col-span-8 bg-surface-container-lowest rounded-xl p-container-padding shadow-sm border border-outline-variant flex flex-col min-h-[400px]">
             <div className="flex justify-between items-center mb-stack-lg">
               <div>
-                <h4 className="font-headline-md text-headline-md text-primary">Evoluție Temperatură & Umiditate</h4>
-                <p className="text-text-secondary font-label-sm">
+                <h4 className="text-headline-md text-primary">Evoluție Temperatură &amp; Umiditate</h4>
+                <p className="text-text-secondary text-label-sm">
                   {timeRange === '-24h' ? 'Ultimele 24 de ore' : timeRange === '-7d' ? 'Ultimele 7 zile' : 'Ultimele 30 de zile'}
                 </p>
               </div>
@@ -127,14 +126,13 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
             </div>
           </div>
 
-          {/* Bar Chart Mock: Energy Consumption by Hour */}
+          {/* Bar Chart: Energy Consumption by Hour */}
           <div className="lg:col-span-4 bg-surface-container-lowest rounded-xl p-container-padding shadow-sm border border-outline-variant flex flex-col min-h-[400px]">
             <div className="mb-stack-lg">
-              <h4 className="font-headline-md text-headline-md text-primary">Consum Energie / Oră</h4>
-              <p className="text-text-secondary font-label-sm">Distribuție pe intervale (Simulare)</p>
+              <h4 className="text-headline-md text-primary">Consum Energie / Oră</h4>
+              <p className="text-text-secondary text-label-sm">Distribuție pe intervale</p>
             </div>
             <div className="flex-1 flex items-end justify-between gap-2 px-1">
-              {/* Bar Items based on HTML mock */}
               <div className="flex-1 bg-surface-container-high rounded-t-full hover:bg-secondary transition-colors" style={{ height: '40%' }}></div>
               <div className="flex-1 bg-surface-container-high rounded-t-full hover:bg-secondary transition-colors" style={{ height: '35%' }}></div>
               <div className="flex-1 bg-surface-container-high rounded-t-full hover:bg-secondary transition-colors" style={{ height: '25%' }}></div>
@@ -151,10 +149,36 @@ const History = ({ stats, historyData, timeRange, setTimeRange, influxLoading, c
                 <span className="text-label-md font-bold text-primary">Vârf de consum</span>
                 <span className="bg-error-container text-on-error-container px-2 py-1 rounded text-label-sm font-bold">14:00 - 15:00</span>
               </div>
-              <p className="text-label-sm text-text-secondary mt-2">Sistemul a funcționat la capacitate maximă în acest interval.</p>
+              <p className="text-label-sm text-text-secondary mt-2">Electrocasnicele din bucătărie au generat 40% din cererea de astăzi.</p>
             </div>
           </div>
 
+        </div>
+
+        {/* Bottom Section: Impact Ecologic + Raport PDF */}
+        <div className="mt-stack-lg grid grid-cols-1 md:grid-cols-2 gap-gutter">
+          {/* Ecological Impact Card */}
+          <div className="bg-on-primary-container text-on-primary p-6 rounded-xl flex items-center gap-6">
+            <div className="p-4 bg-white/10 rounded-full">
+              <span className="material-symbols-outlined text-[40px]">eco</span>
+            </div>
+            <div>
+              <h5 className="text-headline-md">Impact Ecologic</h5>
+              <p className="text-body-md opacity-80">Astăzi ați economisit echivalentul a 1.2kg de CO2 prin optimizarea încălzirii.</p>
+            </div>
+          </div>
+
+          {/* Weekly Report Banner */}
+          <div className="bg-surface p-container-padding rounded-xl border border-dashed border-outline flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="material-symbols-outlined text-text-secondary">description</span>
+              <span className="text-label-md text-text-primary">Raport săptămânal disponibil</span>
+            </div>
+            <button className="text-primary font-bold text-label-md flex items-center gap-1 hover:underline">
+              Descarcă PDF
+              <span className="material-symbols-outlined text-[18px]">download</span>
+            </button>
+          </div>
         </div>
 
       </div>
