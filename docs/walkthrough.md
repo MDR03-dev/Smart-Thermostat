@@ -1,4 +1,4 @@
-# Walkthrough - Reproiectare "Lumina Home"
+# Walkthrough - Reproiectare "Lumina Home" & Hardware
 
 Am finalizat migrarea masivă a interfeței către noul design (Light Theme, Tailwind v4). Iată o recapitulare a modificărilor:
 
@@ -16,8 +16,22 @@ Deoarece codul tău venea cu variabile CSS specifice setate printr-un script Tai
 ## 3. Stabilitate și Fallback-uri (Istoric Influx)
 Am adăugat logica Influx direct pe noua pagină "Istoric". Butoanele "Azi", "Săptămână", "Lună" funcționează în mod real și preiau datele adecvate. Dacă nu există date (din lipsă de funcționare a ESP-ului), sistemul detectează și randează elegant un indicator vizual.
 
-## Cum să verifici
-Accesează site-ul tău care a fost actualizat **LIVE**:
-[https://smartthermostat-7a31d.web.app](https://smartthermostat-7a31d.web.app)
+## 4. Integrare Hardware și ESP32 (Status Curent)
+Sistemul Hardware a fost structurat în două proiecte distincte PlatformIO:
+- **Nodul 2 (Senzori & Ecran - `nodul2-esp32`)**: 
+  - **STATUS: FUNCȚIONAL LVE.** 
+  - Codul a fost compilat și scris cu succes.
+  - S-a stabilit conexiunea I2C pe pinii ceruți fizic pe breadboard: **SDA = 22, SCL = 23**.
+  - Ecranul OLED afișează temperatura, umiditatea și statusul conexiunii Wi-Fi.
+  - SHT31 citește corect datele și trimite telemetria la fiecare 3 secunde în paralel către **Firebase Realtime Database** și **InfluxDB** (Cloud).
 
-Vei observa imediat noul design luminos. Încearcă să navighezi prin paginile din meniul din stânga. Mici optimizări viitoare pot include adăugarea unui meniu de "hamburger" (mobile nav) dacă intenționezi să folosești platforma frecvent de pe un ecran mic (momentan, conform HTML-ului trimis, SideNavBar-ul este `hidden md:flex`, adică vizibil doar pe tablete/desktop).
+- **Nodul 1 (Control Relee - `nodul1-esp32`)**:
+  - **STATUS: COD SCRIS, Urmează Upload-ul.**
+  - Deoarece modulul INA219 s-a stabilit a fi doar de design, s-a implementat direct un algoritm **Bang-Bang cu histerezis (0.5 °C)**.
+  - Pinii pentru Relee sunt **19 (Încălzire - IN1)** și **18 (Răcire - IN2)**, operate pe logică *Active-Low*.
+  - Nodul va subscrie din Firebase la temperatura citită de Nodul 2 și va trimite comutările către InfluxDB (estimare consum) sub formă de tag `incalzire_on`.
+
+## Cum să verifici Frontend-ul
+Accesează site-ul tău care a fost actualizat **LIVE**:
+[https://smartthermostat-7a31d.web.app](https://smartthermostat-7a31d.web.app) (Sau pe localhost în timpul dezvoltării).
+Vei observa imediat noul design luminos.

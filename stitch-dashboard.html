@@ -1,0 +1,387 @@
+<!DOCTYPE html><html class="light" lang="ro" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Lumina Home - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbd1",
+                        "tertiary": "#330700",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#3b0900",
+                        "tertiary-fixed-dim": "#ffb5a0",
+                        "on-secondary-container": "#006573",
+                        "on-surface": "#181c1e",
+                        "status-heating": "#FF5722",
+                        "surface-dim": "#d7dadc",
+                        "status-cooling": "#00BCD4",
+                        "on-primary-container": "#8293b8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#b6c6ef",
+                        "surface-container": "#ebeef0",
+                        "surface-container-low": "#f1f4f6",
+                        "on-tertiary-fixed-variant": "#862200",
+                        "surface-card": "#FFFFFF",
+                        "on-secondary-fixed-variant": "#004e59",
+                        "on-background": "#181c1e",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed": "#001f25",
+                        "on-primary-fixed-variant": "#364768",
+                        "outline": "#75777f",
+                        "on-tertiary-container": "#ff5c29",
+                        "text-secondary": "#64748B",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e5e9eb",
+                        "status-eco": "#4CAF50",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#58e6ff",
+                        "surface-tint": "#4e5e81",
+                        "on-surface-variant": "#44474e",
+                        "surface": "#f7fafc",
+                        "tertiary-container": "#571200",
+                        "inverse-primary": "#b6c6ef",
+                        "primary": "#031635",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#081b3a",
+                        "primary-container": "#1a2b4b",
+                        "secondary-fixed-dim": "#44d8f1",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f7fafc",
+                        "error-container": "#ffdad6",
+                        "secondary": "#006876",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eef1f3",
+                        "background": "#f7fafc",
+                        "secondary-fixed": "#a1efff",
+                        "text-primary": "#1A2B4B",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c5c6cf",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "stack-sm": "4px",
+                        "base": "8px",
+                        "stack-md": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "display-temp": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-temp": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface dark:bg-inverse-surface shadow-sm border-b border-outline-variant">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary text-3xl">flare</span>
+<h1 class="text-sm font-bold text-primary dark:text-inverse-primary leading-tight max-w-[250px]">Platforma Integrată de Control Automatizat al Climatizării pentru Aplicații Rezidențiale</h1>
+</div>
+
+</header>
+<div class="flex pt-16 h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 p-base bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant transition-all z-40">
+<div class="px-base py-stack-lg border-b border-outline-variant mb-stack-md"><p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">System Status</p><div class="mt-stack-sm flex items-center gap-base text-status-eco"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">circle</span><span class="text-headline-md font-bold">Online</span></div></div>
+<div class="flex flex-col gap-base flex-grow">
+<!-- Section 1: Dashboard (Active) -->
+<a class="flex items-center gap-stack-md p-stack-md bg-secondary-container text-on-secondary-container rounded-lg font-bold active:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md">Dashboard</span>
+</a>
+<!-- Section 2: Istoric & KPI -->
+<a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-md">Istoric &amp; KPI</span>
+</a>
+<!-- Section 3: Setări & Financiar -->
+<a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-md">Setări &amp; Financiar</span>
+</a>
+<div class="mt-stack-lg pt-stack-lg border-t border-outline-variant opacity-50 px-base">
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Încăperi</span>
+</div>
+<a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined text-sm">weekend</span>
+<span class="font-label-md text-sm">Living Room</span>
+</a>
+<a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+<span class="material-symbols-outlined text-sm">kitchen</span>
+<span class="font-label-md text-sm">Kitchen</span>
+</a>
+</div>
+
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 p-container-padding overflow-y-auto bg-background">
+<div class="max-w-7xl mx-auto space-y-stack-lg">
+<!-- Live Data Header -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Temp Card -->
+<div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-heating">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-status-heating bg-tertiary-fixed p-base rounded-lg">thermometer</span>
+<span class="text-label-sm text-on-surface-variant font-medium">Interior</span>
+</div>
+<div class="mt-stack-md flex items-baseline gap-base">
+<span class="font-display-temp text-display-temp text-primary">23.4</span>
+<span class="font-headline-md text-headline-md text-on-surface-variant">°C</span>
+</div>
+<p class="text-label-sm text-on-surface-variant mt-stack-sm">Ideal: 22°C - 24°C</p>
+</div>
+<!-- Humidity Card -->
+<div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-cooling">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-status-cooling bg-secondary-fixed p-base rounded-lg" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="text-label-sm text-on-surface-variant font-medium">Umiditate</span>
+</div>
+<div class="mt-stack-md flex items-baseline gap-base">
+<span class="font-display-temp text-display-temp text-primary">48</span>
+<span class="font-headline-md text-headline-md text-on-surface-variant">%</span>
+</div>
+<p class="text-label-sm text-on-surface-variant mt-stack-sm">Zonă de confort optimă</p>
+</div>
+<!-- Energy Card -->
+<div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-eco">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-status-eco bg-status-eco/10 p-base rounded-lg">bolt</span>
+<span class="text-label-sm text-on-surface-variant font-medium">Consum Instant</span>
+</div>
+<div class="mt-stack-md flex flex-col">
+<div class="flex items-baseline gap-base">
+<span class="font-display-temp text-display-temp text-primary">824</span>
+<span class="font-headline-md text-headline-md text-on-surface-variant">W</span>
+</div>
+<span class="text-label-sm font-bold text-on-surface-variant">3.65 A</span>
+</div>
+</div>
+</div>
+<!-- Control & Scenarios Row -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+<!-- Temp Control Widget -->
+<div class="lg:col-span-7 glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-status-heating opacity-50"></div>
+<h3 class="font-headline-md text-headline-md text-primary mb-stack-lg self-start">Control Climă</h3>
+<div class="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+<!-- Circular Progress Visual -->
+<div class="absolute inset-0 rounded-full border-[12px] border-surface-container flex items-center justify-center">
+<div class="absolute inset-[-4px] rounded-full border-[2px] border-dashed border-outline-variant animate-[spin_60s_linear_infinite]"></div>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="text-label-md text-on-surface-variant font-bold uppercase tracking-widest">Setpoint</span>
+<div class="font-display-temp text-display-temp text-primary" id="temp-display">22.5</div>
+<span class="text-headline-md text-on-surface-variant">° Celsius</span>
+</div>
+<!-- Floating Buttons -->
+<button class="absolute left-[-20px] top-1/2 -translate-y-1/2 w-16 h-16 bg-surface-card shadow-xl rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all active:scale-90 border border-outline-variant" onclick="adjustTemp(-0.5)">
+<span class="material-symbols-outlined text-3xl">remove</span>
+</button>
+<button class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-16 h-16 bg-primary shadow-xl rounded-full flex items-center justify-center text-white hover:bg-primary-container transition-all active:scale-90" onclick="adjustTemp(0.5)">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<div class="mt-stack-lg flex gap-gutter w-full">
+<button class="flex-1 py-stack-md rounded-lg bg-surface-container-high text-on-surface font-bold hover:bg-surface-variant transition-colors flex items-center justify-center gap-base">
+<span class="material-symbols-outlined">ac_unit</span>
+                            Răcire
+                        </button>
+<button class="flex-1 py-stack-md rounded-lg bg-status-heating text-white font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-base">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leak_remove</span>
+                            Încălzire
+                        </button>
+</div>
+</div>
+<!-- Scenarios & Finance -->
+<div class="lg:col-span-5 flex flex-col gap-gutter">
+<!-- Scenarios Section -->
+<div class="glass-card p-stack-lg rounded-xl shadow-sm flex flex-col gap-stack-md">
+<h3 class="font-headline-md text-headline-md text-primary">Scenarii</h3>
+<div class="flex flex-col gap-stack-sm">
+<button class="flex items-center justify-between p-stack-md rounded-lg bg-primary text-white shadow-lg active:scale-95 transition-all">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-bold">Acasă</span>
+</div>
+<span class="text-xs bg-white/20 px-base py-1 rounded-full">Activ</span>
+</button>
+<button class="flex items-center justify-between p-stack-md rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-all">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined">directions_run</span>
+<span class="font-bold">Plecat</span>
+</div>
+</button>
+<button class="flex items-center justify-between p-stack-md rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-all">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined">bedtime</span>
+<span class="font-bold">Noapte</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Financial Sidebar -->
+<div class="glass-card p-stack-lg rounded-xl shadow-sm border border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-base mb-stack-md">
+<span class="material-symbols-outlined text-on-secondary-container">payments</span>
+<h3 class="font-headline-md text-headline-md text-primary">Analiză Financiară</h3>
+</div>
+<div class="space-y-stack-md">
+<div class="bg-surface-container p-stack-md rounded-lg">
+<p class="text-label-sm text-on-surface-variant">Cost estimat curent (Lună)</p>
+<p class="text-headline-lg text-primary font-black">14.50 Lei</p>
+</div>
+<div>
+<label class="text-label-sm text-on-surface-variant block mb-1">Profil Tarifar</label>
+<select class="w-full bg-surface-container-high border-none rounded-lg font-label-md text-on-surface py-stack-md px-base focus:ring-2 focus:ring-primary">
+<option>Standard</option>
+<option>Noapte (Redus)</option>
+<option selected="">Eco Plus</option>
+</select>
+</div>
+<div class="flex items-center gap-base text-status-eco">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span class="text-xs font-medium">Cu 12% mai puțin față de luna trecută</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- History Section -->
+<div class="glass-card p-stack-lg rounded-xl shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-stack-lg gap-gutter">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Istoric 24h</h3>
+<p class="text-label-sm text-on-surface-variant">Monitorizare parametri mediu și consum</p>
+</div>
+<div class="flex bg-surface-container rounded-lg p-1">
+<button class="px-base py-1 text-xs font-bold bg-white rounded shadow-sm text-primary">Temperatură</button>
+<button class="px-base py-1 text-xs font-medium text-on-surface-variant hover:text-primary">Consum</button>
+</div>
+</div>
+<div class="h-64 md:h-80 w-full bg-surface-container-low rounded-xl border border-dashed border-outline-variant flex items-center justify-center relative overflow-hidden group">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<div class="w-full h-full" style="background-image: linear-gradient(90deg, transparent 49%, #ccc 50%, transparent 51%), linear-gradient(0deg, transparent 49%, #ccc 50%, transparent 51%); background-size: 40px 40px;"></div>
+</div>
+<div class="flex flex-col items-center gap-base z-10">
+<div class="flex items-center justify-center p-stack-lg bg-surface-card rounded-full shadow-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-4xl animate-pulse">query_stats</span>
+</div>
+<span class="font-label-md text-on-surface-variant italic">Se încarcă Chart.js...</span>
+</div>
+<!-- Decorative Spline Lines -->
+<svg class="absolute bottom-0 left-0 w-full h-1/2 opacity-30" preserveAspectRatio="none" viewBox="0 0 1000 100">
+<path d="M0,80 Q100,20 200,60 T400,40 T600,80 T800,30 T1000,70" fill="none" stroke="#00BCD4" stroke-linecap="round" stroke-width="4"></path>
+<path d="M0,60 Q150,90 300,50 T600,20 T900,60 T1000,40" fill="none" stroke="#FF5722" stroke-dasharray="5 5" stroke-width="2"></path>
+</svg>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-stack-lg">
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant font-medium">Max Temp</span>
+<span class="text-headline-md text-primary font-bold">26.1°C</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant font-medium">Min Temp</span>
+<span class="text-headline-md text-primary font-bold">19.8°C</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant font-medium">Consum Total</span>
+<span class="text-headline-md text-primary font-bold">12.4 kWh</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-on-surface-variant font-medium">Economie Eco</span>
+<span class="text-headline-md text-status-eco font-bold">2.1 Lei</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+    let currentTemp = 22.5;
+    const tempDisplay = document.getElementById('temp-display');
+
+    function adjustTemp(amount) {
+        currentTemp = parseFloat((currentTemp + amount).toFixed(1));
+        tempDisplay.textContent = currentTemp.toFixed(1);
+        
+        // Visual feedback
+        tempDisplay.parentElement.classList.add('scale-105');
+        setTimeout(() => {
+            tempDisplay.parentElement.classList.remove('scale-105');
+        }, 100);
+        
+        // Dynamic color shift based on temp
+        if (currentTemp > 24) {
+            tempDisplay.classList.add('text-status-heating');
+            tempDisplay.classList.remove('text-status-cooling');
+        } else if (currentTemp < 20) {
+            tempDisplay.classList.add('text-status-cooling');
+            tempDisplay.classList.remove('text-status-heating');
+        } else {
+            tempDisplay.classList.remove('text-status-heating', 'text-status-cooling');
+        }
+    }
+
+    // Simulate real-time data updates
+    setInterval(() => {
+        const wattageCards = document.querySelectorAll('.grid > div .text-display-temp');
+        if (wattageCards.length >= 3) {
+            const wattage = wattageCards[2];
+            const variation = Math.floor(Math.random() * 10) - 5;
+            const newVal = Math.max(820, Math.min(880, parseInt(wattage.textContent) + variation));
+            wattage.textContent = newVal;
+        }
+    }, 3000);
+</script>
+
+
+</body></html>

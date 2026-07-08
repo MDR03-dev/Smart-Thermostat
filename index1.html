@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Lumina Home - Control Climatizare</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+    .lift-effect { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .lift-effect:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05); }
+    .page { display: none; }
+    .page.active { display: block; }
+    .nav-link.active-link { background-color: #58e6ff; color: #006573; font-weight: 700; }
+</style>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "tertiary-fixed": "#ffdbd1", "tertiary": "#330700", "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#3b0900", "tertiary-fixed-dim": "#ffb5a0", "on-secondary-container": "#006573",
+                    "on-surface": "#181c1e", "status-heating": "#FF5722", "surface-dim": "#d7dadc",
+                    "status-cooling": "#00BCD4", "on-primary-container": "#8293b8", "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#b6c6ef", "surface-container": "#ebeef0", "surface-container-low": "#f1f4f6",
+                    "on-tertiary-fixed-variant": "#862200", "surface-card": "#FFFFFF", "on-secondary-fixed-variant": "#004e59",
+                    "on-background": "#181c1e", "inverse-surface": "#2d3133", "on-secondary-fixed": "#001f25",
+                    "on-primary-fixed-variant": "#364768", "outline": "#75777f", "on-tertiary-container": "#ff5c29",
+                    "text-secondary": "#64748B", "surface-container-highest": "#e0e3e5", "surface-container-high": "#e5e9eb",
+                    "status-eco": "#4CAF50", "primary-fixed": "#d8e2ff", "surface-variant": "#e0e3e5",
+                    "secondary-container": "#58e6ff", "surface-tint": "#4e5e81", "on-surface-variant": "#44474e",
+                    "surface": "#f7fafc", "tertiary-container": "#571200", "inverse-primary": "#b6c6ef",
+                    "primary": "#031635", "error": "#ba1a1a", "on-primary-fixed": "#081b3a", "primary-container": "#1a2b4b",
+                    "secondary-fixed-dim": "#44d8f1", "on-secondary": "#ffffff", "surface-bright": "#f7fafc",
+                    "error-container": "#ffdad6", "secondary": "#006876", "on-error": "#ffffff",
+                    "inverse-on-surface": "#eef1f3", "background": "#f7fafc", "secondary-fixed": "#a1efff",
+                    "text-primary": "#1A2B4B", "on-tertiary": "#ffffff", "outline-variant": "#c5c6cf", "on-primary": "#ffffff"
+                },
+                borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+                spacing: { "container-padding": "24px", "stack-lg": "24px", "gutter": "16px", "stack-sm": "4px", "base": "8px", "stack-md": "12px" },
+                fontFamily: {
+                    "headline-lg": ["Inter"], "label-md": ["Inter"], "display-temp": ["Inter"], "headline-lg-mobile": ["Inter"],
+                    "body-lg": ["Inter"], "label-sm": ["Inter"], "body-md": ["Inter"], "headline-md": ["Inter"]
+                },
+                fontSize: {
+                    "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}],
+                    "label-md": ["14px", {lineHeight: "20px", fontWeight: "500"}],
+                    "display-temp": ["64px", {lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "600"}],
+                    "headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}],
+                    "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}],
+                    "label-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}],
+                    "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}],
+                    "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}]
+                }
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface shadow-sm border-b border-outline-variant">
+    <div class="flex items-center gap-stack-md">
+        <span class="material-symbols-outlined text-primary text-3xl">flare</span>
+        <h1 class="text-sm font-bold text-primary leading-tight max-w-[250px] md:max-w-none">Platforma Integrată de Control Automatizat al Climatizării</h1>
+    </div>
+</header>
+
+<div class="flex pt-16 min-h-screen">
+    <!-- SideNavBar -->
+    <nav class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 p-base bg-surface-container-low border-r border-outline-variant z-40">
+        <div class="px-base py-stack-lg border-b border-outline-variant mb-stack-md">
+            <p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">System Status</p>
+            <div class="mt-stack-sm flex items-center gap-base text-status-eco">
+                <span class="material-symbols-outlined fill text-sm">circle</span>
+                <span class="text-headline-md font-bold">Online</span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-base flex-grow">
+            <a data-page="dashboard" class="nav-link flex items-center gap-stack-md p-stack-md rounded-lg font-bold transition-all active:translate-x-1 cursor-pointer" href="#">
+                <span class="material-symbols-outlined nav-icon">dashboard</span>
+                <span class="font-label-md">Dashboard</span>
+            </a>
+            <a data-page="istoric" class="nav-link flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1 cursor-pointer" href="#">
+                <span class="material-symbols-outlined nav-icon">query_stats</span>
+                <span class="font-label-md">Istoric &amp; KPI</span>
+            </a>
+            <a data-page="setari" class="nav-link flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1 cursor-pointer" href="#">
+                <span class="material-symbols-outlined nav-icon">settings_suggest</span>
+                <span class="font-label-md">Setări &amp; Financiar</span>
+            </a>
+            <div class="mt-stack-lg pt-stack-lg border-t border-outline-variant opacity-50 px-base">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Încăperi</span>
+            </div>
+            <a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+                <span class="material-symbols-outlined text-sm">weekend</span>
+                <span class="font-label-md text-sm">Living Room</span>
+            </a>
+            <a class="flex items-center gap-stack-md p-stack-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-all active:translate-x-1" href="#">
+                <span class="material-symbols-outlined text-sm">kitchen</span>
+                <span class="font-label-md text-sm">Kitchen</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============ PAGE: DASHBOARD ============ -->
+    <main class="page active flex-1 md:ml-64 p-container-padding overflow-y-auto bg-background pb-24 md:pb-8" id="page-dashboard">
+        <div class="max-w-7xl mx-auto space-y-stack-lg">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                <div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-heating">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-status-heating bg-tertiary-fixed p-base rounded-lg">thermometer</span>
+                        <span class="text-label-sm text-on-surface-variant font-medium">Interior</span>
+                    </div>
+                    <div class="mt-stack-md flex items-baseline gap-base">
+                        <span class="font-display-temp text-display-temp text-primary">23.4</span>
+                        <span class="font-headline-md text-headline-md text-on-surface-variant">°C</span>
+                    </div>
+                    <p class="text-label-sm text-on-surface-variant mt-stack-sm">Ideal: 22°C - 24°C</p>
+                </div>
+                <div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-cooling">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined fill text-status-cooling bg-secondary-fixed p-base rounded-lg">water_drop</span>
+                        <span class="text-label-sm text-on-surface-variant font-medium">Umiditate</span>
+                    </div>
+                    <div class="mt-stack-md flex items-baseline gap-base">
+                        <span class="font-display-temp text-display-temp text-primary">48</span>
+                        <span class="font-headline-md text-headline-md text-on-surface-variant">%</span>
+                    </div>
+                    <p class="text-label-sm text-on-surface-variant mt-stack-sm">Zonă de confort optimă</p>
+                </div>
+                <div class="glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border-l-4 border-status-eco">
+                    <div class="flex justify-between items-start">
+                        <span class="material-symbols-outlined text-status-eco bg-status-eco/10 p-base rounded-lg">bolt</span>
+                        <span class="text-label-sm text-on-surface-variant font-medium">Consum Instant</span>
+                    </div>
+                    <div class="mt-stack-md flex flex-col">
+                        <div class="flex items-baseline gap-base">
+                            <span class="font-display-temp text-display-temp text-primary" id="wattage-display">824</span>
+                            <span class="font-headline-md text-headline-md text-on-surface-variant">W</span>
+                        </div>
+                        <span class="text-label-sm font-bold text-on-surface-variant" id="amps-display">3.65 A</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-stretch">
+                <div class="lg:col-span-7 glass-card p-stack-lg rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.05)] flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-status-heating opacity-50"></div>
+                    <h3 class="font-headline-md text-headline-md text-primary mb-stack-lg self-start">Control Climă</h3>
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-[12px] border-surface-container flex items-center justify-center">
+                            <div class="absolute inset-[-4px] rounded-full border-[2px] border-dashed border-outline-variant animate-[spin_60s_linear_infinite]"></div>
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center">
+                            <span class="text-label-md text-on-surface-variant font-bold uppercase tracking-widest">Setpoint</span>
+                            <div class="font-display-temp text-display-temp text-primary" id="temp-display">22.5</div>
+                            <span class="text-headline-md text-on-surface-variant">° Celsius</span>
+                        </div>
+                        <button class="absolute left-[-20px] top-1/2 -translate-y-1/2 w-16 h-16 bg-surface-card shadow-xl rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all active:scale-90 border border-outline-variant" onclick="adjustTemp(-0.5)">
+                            <span class="material-symbols-outlined text-3xl">remove</span>
+                        </button>
+                        <button class="absolute right-[-20px] top-1/2 -translate-y-1/2 w-16 h-16 bg-primary shadow-xl rounded-full flex items-center justify-center text-white hover:bg-primary-container transition-all active:scale-90" onclick="adjustTemp(0.5)">
+                            <span class="material-symbols-outlined text-3xl">add</span>
+                        </button>
+                    </div>
+                    <div class="mt-stack-lg flex gap-gutter w-full">
+                        <button id="btn-cooling" class="mode-btn flex-1 py-stack-md rounded-lg bg-surface-container-high text-on-surface font-bold hover:bg-surface-variant transition-colors flex items-center justify-center gap-base" onclick="setMode('cooling')">
+                            <span class="material-symbols-outlined">ac_unit</span> Răcire
+                        </button>
+                        <button id="btn-heating" class="mode-btn flex-1 py-stack-md rounded-lg bg-status-heating text-white font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-base" onclick="setMode('heating')">
+                            <span class="material-symbols-outlined fill">leak_remove</span> Încălzire
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 flex flex-col gap-gutter">
+                    <div class="glass-card p-stack-lg rounded-xl shadow-sm flex flex-col gap-stack-md">
+                        <h3 class="font-headline-md text-headline-md text-primary">Scenarii</h3>
+                        <div class="flex flex-col gap-stack-sm" id="scenario-list">
+                            <button data-scenario="acasa" class="scenario-btn flex items-center justify-between p-stack-md rounded-lg bg-primary text-white shadow-lg active:scale-95 transition-all">
+                                <div class="flex items-center gap-stack-md">
+                                    <span class="material-symbols-outlined fill">home</span>
+                                    <span class="font-bold">Acasă</span>
+                                </div>
+                                <span class="badge-active text-xs bg-white/20 px-base py-1 rounded-full">Activ</span>
+                            </button>
+                            <button data-scenario="plecat" class="scenario-btn flex items-center justify-between p-stack-md rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-all">
+                                <div class="flex items-center gap-stack-md">
+                                    <span class="material-symbols-outlined">directions_run</span>
+                                    <span class="font-bold">Plecat</span>
+                                </div>
+                            </button>
+                            <button data-scenario="noapte" class="scenario-btn flex items-center justify-between p-stack-md rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest transition-all">
+                                <div class="flex items-center gap-stack-md">
+                                    <span class="material-symbols-outlined">bedtime</span>
+                                    <span class="font-bold">Noapte</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="glass-card p-stack-lg rounded-xl shadow-sm border border-outline-variant bg-surface-container-lowest">
+                        <div class="flex items-center gap-base mb-stack-md">
+                            <span class="material-symbols-outlined text-on-secondary-container">payments</span>
+                            <h3 class="font-headline-md text-headline-md text-primary">Analiză Financiară</h3>
+                        </div>
+                        <div class="space-y-stack-md">
+                            <div class="bg-surface-container p-stack-md rounded-lg">
+                                <p class="text-label-sm text-on-surface-variant">Cost estimat curent (Lună)</p>
+                                <p class="text-headline-lg text-primary font-black" id="cost-display">14.50 Lei</p>
+                            </div>
+                            <div>
+                                <label class="text-label-sm text-on-surface-variant block mb-1">Profil Tarifar</label>
+                                <select class="w-full bg-surface-container-high border-none rounded-lg font-label-md text-on-surface py-stack-md px-base focus:ring-2 focus:ring-primary">
+                                    <option>Standard</option>
+                                    <option>Noapte (Redus)</option>
+                                    <option selected>Eco Plus</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-base text-status-eco">
+                                <span class="material-symbols-outlined text-sm">trending_down</span>
+                                <span class="text-xs font-medium">Cu 12% mai puțin față de luna trecută</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-stack-lg rounded-xl shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-stack-lg gap-gutter">
+                    <div>
+                        <h3 class="font-headline-md text-headline-md text-primary">Istoric 24h</h3>
+                        <p class="text-label-sm text-on-surface-variant">Monitorizare parametri mediu și consum</p>
+                    </div>
+                    <div class="flex bg-surface-container rounded-lg p-1">
+                        <button id="tab-temp" class="chart-tab px-base py-1 text-xs font-bold bg-white rounded shadow-sm text-primary" onclick="switchChartTab('temp')">Temperatură</button>
+                        <button id="tab-consum" class="chart-tab px-base py-1 text-xs font-medium text-on-surface-variant hover:text-primary" onclick="switchChartTab('consum')">Consum</button>
+                    </div>
+                </div>
+                <div class="h-64 md:h-80 w-full">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-gutter mt-stack-lg">
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant font-medium">Max Temp</span>
+                        <span class="text-headline-md text-primary font-bold">26.1°C</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant font-medium">Min Temp</span>
+                        <span class="text-headline-md text-primary font-bold">19.8°C</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant font-medium">Consum Total</span>
+                        <span class="text-headline-md text-primary font-bold">12.4 kWh</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant font-medium">Economie Eco</span>
+                        <span class="text-headline-md text-status-eco font-bold">2.1 Lei</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ PAGE: ISTORIC & KPI ============ -->
+    <main class="page md:ml-64 pt-24 px-container-padding pb-24 md:pb-12" id="page-istoric">
+        <div class="max-w-7xl mx-auto">
+            <header class="mb-stack-lg flex justify-between items-end">
+                <div>
+                    <h1 class="font-headline-lg text-headline-lg text-primary">Istoric &amp; KPI</h1>
+                    <p class="text-text-secondary font-body-md">Analiza performanței sistemului smart Lumina</p>
+                </div>
+                <div class="flex gap-2 bg-surface-container p-1 rounded-lg">
+                    <button class="range-tab px-4 py-1.5 rounded-md text-label-md bg-surface-container-lowest shadow-sm font-bold" data-range="azi">Azi</button>
+                    <button class="range-tab px-4 py-1.5 rounded-md text-label-md text-on-surface-variant hover:bg-surface-container-high" data-range="saptamana">Săptămână</button>
+                    <button class="range-tab px-4 py-1.5 rounded-md text-label-md text-on-surface-variant hover:bg-surface-container-high" data-range="luna">Lună</button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-stack-lg">
+                <div class="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between">
+                    <div>
+                        <p class="text-text-secondary font-label-md mb-2">Temperatura medie azi</p>
+                        <h3 class="font-display-temp text-[40px] text-primary leading-none">22.8°C</h3>
+                        <div class="flex items-center gap-1 mt-3 text-status-eco font-label-sm">
+                            <span class="material-symbols-outlined text-[16px]">trending_down</span>
+                            -0.4°C față de ieri
+                        </div>
+                    </div>
+                    <div class="bg-primary-fixed p-3 rounded-xl text-primary">
+                        <span class="material-symbols-outlined text-[32px]">thermostat</span>
+                    </div>
+                </div>
+                <div class="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between border-l-4 border-l-status-cooling">
+                    <div>
+                        <p class="text-text-secondary font-label-md mb-2">Consum total azi</p>
+                        <h3 class="font-display-temp text-[40px] text-primary leading-none">5.2 kWh</h3>
+                        <div class="flex items-center gap-1 mt-3 text-status-heating font-label-sm">
+                            <span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            +12% vs. media lunară
+                        </div>
+                    </div>
+                    <div class="bg-secondary-fixed p-3 rounded-xl text-secondary">
+                        <span class="material-symbols-outlined text-[32px]">bolt</span>
+                    </div>
+                </div>
+                <div class="glass-card p-container-padding rounded-xl lift-effect shadow-[0_4px_12px_rgba(0,0,0,0.05)] flex items-start justify-between">
+                    <div>
+                        <p class="text-text-secondary font-label-md mb-2">Timp funcționare</p>
+                        <h3 class="font-display-temp text-[40px] text-primary leading-none">8h 15m</h3>
+                        <div class="flex items-center gap-1 mt-3 text-text-secondary font-label-sm">
+                            <span class="material-symbols-outlined text-[16px]">schedule</span>
+                            Sistem activ continuu
+                        </div>
+                    </div>
+                    <div class="bg-tertiary-fixed p-3 rounded-xl text-tertiary">
+                        <span class="material-symbols-outlined text-[32px]">avg_time</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+                <div class="lg:col-span-8 bg-surface-container-lowest rounded-xl p-container-padding shadow-sm border border-outline-variant flex flex-col min-h-[400px]">
+                    <div class="flex justify-between items-center mb-stack-lg">
+                        <div>
+                            <h4 class="font-headline-md text-headline-md text-primary">Evoluție Temperatură &amp; Umiditate</h4>
+                            <p class="text-text-secondary font-label-sm">Ultimele 24 de ore</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-primary"></span><span class="text-label-sm">Temp (°C)</span></div>
+                            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-status-cooling"></span><span class="text-label-sm">Umiditate (%)</span></div>
+                        </div>
+                    </div>
+                    <div class="flex-1 relative">
+                        <canvas id="historyLineChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-surface-container-lowest rounded-xl p-container-padding shadow-sm border border-outline-variant flex flex-col min-h-[400px]">
+                    <div class="mb-stack-lg">
+                        <h4 class="font-headline-md text-headline-md text-primary">Consum Energie / Oră</h4>
+                        <p class="text-text-secondary font-label-sm">Distribuție pe intervale</p>
+                    </div>
+                    <div class="flex-1 relative">
+                        <canvas id="historyBarChart"></canvas>
+                    </div>
+                    <div class="mt-stack-lg border-t border-outline-variant pt-stack-md">
+                        <div class="flex justify-between items-center">
+                            <span class="text-label-md font-bold text-primary">Vârf de consum</span>
+                            <span class="bg-error-container text-on-error-container px-2 py-1 rounded text-label-sm font-bold">14:00 - 15:00</span>
+                        </div>
+                        <p class="text-label-sm text-text-secondary mt-2">Electrocasnicele din bucătărie au generat 40% din cererea de astăzi.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-stack-lg grid grid-cols-1 md:grid-cols-2 gap-gutter">
+                <div class="bg-on-primary-container text-on-primary p-6 rounded-xl flex items-center gap-6">
+                    <div class="p-4 bg-white/10 rounded-full"><span class="material-symbols-outlined text-[40px]">eco</span></div>
+                    <div>
+                        <h5 class="font-headline-md">Impact Ecologic</h5>
+                        <p class="font-body-md opacity-80">Astăzi ați economisit echivalentul a 1.2kg de CO2 prin optimizarea încălzirii.</p>
+                    </div>
+                </div>
+                <div class="bg-surface p-container-padding rounded-xl border border-dashed border-outline flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined text-text-secondary">description</span>
+                        <span class="font-label-md text-text-primary">Raport săptămânal disponibil</span>
+                    </div>
+                    <button class="text-primary font-bold text-label-md flex items-center gap-1 hover:underline" onclick="downloadReport()">
+                        Descarcă PDF <span class="material-symbols-outlined text-[18px]">download</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============ PAGE: SETARI & FINANCIAR ============ -->
+    <main class="page md:ml-64 min-h-screen" id="page-setari">
+        <div class="pt-24 pb-24 md:pb-12 px-container-padding max-w-4xl mx-auto space-y-stack-lg">
+            <form class="space-y-stack-lg" id="settings-form">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+                    <div class="bg-surface-card p-stack-lg rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant hover:border-primary transition-colors group">
+                        <div class="flex items-center gap-stack-md mb-stack-lg">
+                            <div class="bg-primary-fixed p-3 rounded-lg text-primary"><span class="material-symbols-outlined">thermostat</span></div>
+                            <h4 class="font-headline-md text-headline-md text-primary">Setări Sistem (Histerezis)</h4>
+                        </div>
+                        <div class="space-y-stack-lg">
+                            <div class="space-y-2">
+                                <label class="block font-label-md text-label-md text-on-surface-variant" for="low-threshold">Prag inferior (Pornire încălzire)</label>
+                                <div class="relative">
+                                    <input class="w-full bg-surface-container-lowest border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all pr-12" id="low-threshold" step="0.1" type="number" value="19.5">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">°C</span>
+                                </div>
+                                <p class="text-[11px] text-on-surface-variant px-1 italic">Sistemul va porni automat sub această valoare.</p>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block font-label-md text-label-md text-on-surface-variant" for="high-threshold">Prag superior (Oprire încălzire)</label>
+                                <div class="relative">
+                                    <input class="w-full bg-surface-container-lowest border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all pr-12" id="high-threshold" step="0.1" type="number" value="22.5">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">°C</span>
+                                </div>
+                                <p class="text-[11px] text-on-surface-variant px-1 italic">Sistemul va opri încălzirea când atinge această valoare.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-card p-stack-lg rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant hover:border-secondary transition-colors group">
+                        <div class="flex items-center gap-stack-md mb-stack-lg">
+                            <div class="bg-secondary-fixed p-3 rounded-lg text-on-secondary-container"><span class="material-symbols-outlined">payments</span></div>
+                            <h4 class="font-headline-md text-headline-md text-primary">Configurare Financiară</h4>
+                        </div>
+                        <div class="space-y-stack-lg">
+                            <div class="space-y-2">
+                                <label class="block font-label-md text-label-md text-on-surface-variant" for="energy-tariff">Tarif Energie (Lei/kWh)</label>
+                                <div class="relative">
+                                    <input class="w-full bg-surface-container-lowest border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary focus:border-secondary transition-all pr-12" id="energy-tariff" step="0.01" type="number" value="0.80">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">Lei</span>
+                                </div>
+                                <p class="text-[11px] text-on-surface-variant px-1 italic">Folosit pentru calcularea costurilor lunare estimate.</p>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block font-label-md text-label-md text-on-surface-variant" for="nominal-power">Putere Nominală Echipament (W)</label>
+                                <div class="relative">
+                                    <input class="w-full bg-surface-container-lowest border-outline-variant rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary focus:border-secondary transition-all pr-12" id="nominal-power" type="number" value="2000">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">W</span>
+                                </div>
+                                <p class="text-[11px] text-on-surface-variant px-1 italic">Puterea de consum maximă a sistemului de climatizare.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-surface-container-high p-stack-md rounded-xl flex flex-col md:flex-row items-center justify-between gap-stack-md border-l-4 border-status-eco">
+                    <div class="flex items-center gap-stack-md">
+                        <span class="material-symbols-outlined fill text-status-eco">eco</span>
+                        <div>
+                            <p class="font-label-md text-label-md text-primary">Optimizare Eco-Smart</p>
+                            <p class="text-label-sm text-on-surface-variant">Setările actuale economisesc aproximativ 12% energie față de luna trecută.</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden md:block">
+                        <span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Status</span>
+                        <p class="font-bold text-status-eco">OPTIMIZAT</p>
+                    </div>
+                </div>
+                <div class="pt-stack-lg flex justify-end">
+                    <button class="w-full md:w-auto px-12 py-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-stack-md shadow-lg active:scale-[0.98] transition-all hover:brightness-110" type="submit">
+                        <span class="material-symbols-outlined">save</span> Salvează Configurarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface shadow-lg px-container-padding h-16 flex items-center justify-between z-50">
+    <button data-page="dashboard" class="mobile-nav-link flex flex-col items-center justify-center gap-1 text-primary font-bold">
+        <span class="material-symbols-outlined nav-icon fill">dashboard</span>
+        <span class="text-[10px] font-bold">Dashboard</span>
+    </button>
+    <button data-page="istoric" class="mobile-nav-link flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+        <span class="material-symbols-outlined nav-icon">query_stats</span>
+        <span class="text-[10px] font-medium">Istoric</span>
+    </button>
+    <button data-page="setari" class="mobile-nav-link flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+        <span class="material-symbols-outlined nav-icon">settings_suggest</span>
+        <span class="text-[10px] font-medium">Setări</span>
+    </button>
+    <button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant">
+        <span class="material-symbols-outlined">account_circle</span>
+        <span class="text-[10px] font-medium">Profil</span>
+    </button>
+</nav>
+
+<script>
+// ===== Navigation =====
+function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        if (link.dataset.page === name) {
+            link.classList.add('active-link');
+            link.classList.remove('text-on-surface-variant');
+        } else {
+            link.classList.remove('active-link');
+            link.classList.add('text-on-surface-variant');
+        }
+    });
+    document.querySelectorAll('.nav-link .nav-icon').forEach(icon => icon.classList.remove('fill'));
+    const activeIcon = document.querySelector(`.nav-link[data-page="${name}"] .nav-icon`);
+    if (activeIcon) activeIcon.classList.add('fill');
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        const icon = link.querySelector('.nav-icon');
+        if (link.dataset.page === name) {
+            link.classList.add('text-primary', 'font-bold');
+            link.classList.remove('text-on-surface-variant');
+            if (icon) icon.classList.add('fill');
+        } else {
+            link.classList.remove('text-primary', 'font-bold');
+            link.classList.add('text-on-surface-variant');
+            if (icon) icon.classList.remove('fill');
+        }
+    });
+
+    window.scrollTo(0, 0);
+    if (name === 'istoric') setTimeout(renderHistoryCharts, 30);
+    if (name === 'dashboard') setTimeout(renderDashboardChart, 30);
+}
+document.querySelectorAll('[data-page]').forEach(el => el.addEventListener('click', () => showPage(el.dataset.page)));
+
+// ===== Dashboard: temp control =====
+let currentTemp = 22.5;
+const tempDisplay = document.getElementById('temp-display');
+function adjustTemp(amount) {
+    currentTemp = parseFloat((currentTemp + amount).toFixed(1));
+    tempDisplay.textContent = currentTemp.toFixed(1);
+    tempDisplay.parentElement.classList.add('scale-105');
+    setTimeout(() => tempDisplay.parentElement.classList.remove('scale-105'), 100);
+    if (currentTemp > 24) {
+        tempDisplay.classList.add('text-status-heating'); tempDisplay.classList.remove('text-status-cooling');
+    } else if (currentTemp < 20) {
+        tempDisplay.classList.add('text-status-cooling'); tempDisplay.classList.remove('text-status-heating');
+    } else {
+        tempDisplay.classList.remove('text-status-heating', 'text-status-cooling');
+    }
+    // recompute estimated cost off setpoint distance from 20 baseline
+    const tariff = parseFloat(document.getElementById('energy-tariff')?.value || 0.80);
+    const power = parseFloat(document.getElementById('nominal-power')?.value || 2000);
+    const hoursPerDay = 8;
+    const loadFactor = Math.min(1, Math.max(0.2, Math.abs(currentTemp - 20) / 8));
+    const monthlyCost = (power / 1000) * hoursPerDay * 30 * tariff * loadFactor;
+    document.getElementById('cost-display').textContent = monthlyCost.toFixed(2) + ' Lei';
+}
+
+function setMode(mode) {
+    const cool = document.getElementById('btn-cooling');
+    const heat = document.getElementById('btn-heating');
+    if (mode === 'cooling') {
+        cool.classList.add('bg-status-cooling', 'text-white');
+        cool.classList.remove('bg-surface-container-high', 'text-on-surface');
+        heat.classList.remove('bg-status-heating', 'text-white');
+        heat.classList.add('bg-surface-container-high', 'text-on-surface');
+    } else {
+        heat.classList.add('bg-status-heating', 'text-white');
+        heat.classList.remove('bg-surface-container-high', 'text-on-surface');
+        cool.classList.remove('bg-status-cooling', 'text-white');
+        cool.classList.add('bg-surface-container-high', 'text-on-surface');
+    }
+}
+
+// ===== Scenarios =====
+document.querySelectorAll('.scenario-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.scenario-btn').forEach(b => {
+            b.classList.remove('bg-primary', 'text-white', 'shadow-lg');
+            b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+            const badge = b.querySelector('.badge-active');
+            if (badge) badge.remove();
+        });
+        btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+        btn.classList.add('bg-primary', 'text-white', 'shadow-lg');
+        if (!btn.querySelector('.badge-active')) {
+            const span = document.createElement('span');
+            span.className = 'badge-active text-xs bg-white/20 px-base py-1 rounded-full';
+            span.textContent = 'Activ';
+            btn.appendChild(span);
+        }
+    });
+});
+
+// ===== Live wattage simulation =====
+setInterval(() => {
+    const wattageEl = document.getElementById('wattage-display');
+    const ampsEl = document.getElementById('amps-display');
+    const variation = Math.floor(Math.random() * 10) - 5;
+    const newVal = Math.max(820, Math.min(880, parseInt(wattageEl.textContent) + variation));
+    wattageEl.textContent = newVal;
+    ampsEl.textContent = (newVal / 225.7).toFixed(2) + ' A';
+}, 3000);
+
+// ===== Charts =====
+Chart.defaults.font.family = 'Inter';
+const hours = ['00:00','02:00','04:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'];
+const tempData = [20.1,19.8,20.4,21.0,22.2,23.5,24.8,26.1,25.3,24.0,22.7,21.2];
+const consumData = [40,35,25,65,90,75,55,45,30,50,60,42];
+
+let dashboardChartInstance = null;
+let currentDashboardTab = 'temp';
+function renderDashboardChart() {
+    const ctx = document.getElementById('dashboardChart');
+    if (!ctx) return;
+    if (dashboardChartInstance) dashboardChartInstance.destroy();
+    if (currentDashboardTab === 'temp') {
+        dashboardChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Temperatură (°C)',
+                    data: tempData,
+                    borderColor: '#1A2B4B',
+                    backgroundColor: 'rgba(26,43,75,0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 0,
+                    borderWidth: 3
+                }]
+            },
+            options: chartOpts()
+        });
+    } else {
+        dashboardChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Consum (%)',
+                    data: consumData,
+                    backgroundColor: '#00BCD4',
+                    borderRadius: 6
+                }]
+            },
+            options: chartOpts()
+        });
+    }
+}
+function switchChartTab(tab) {
+    currentDashboardTab = tab;
+    const tTemp = document.getElementById('tab-temp');
+    const tConsum = document.getElementById('tab-consum');
+    if (tab === 'temp') {
+        tTemp.classList.add('bg-white','shadow-sm','text-primary','font-bold');
+        tTemp.classList.remove('text-on-surface-variant','font-medium');
+        tConsum.classList.remove('bg-white','shadow-sm','text-primary','font-bold');
+        tConsum.classList.add('text-on-surface-variant','font-medium');
+    } else {
+        tConsum.classList.add('bg-white','shadow-sm','text-primary','font-bold');
+        tConsum.classList.remove('text-on-surface-variant','font-medium');
+        tTemp.classList.remove('bg-white','shadow-sm','text-primary','font-bold');
+        tTemp.classList.add('text-on-surface-variant','font-medium');
+    }
+    renderDashboardChart();
+}
+function chartOpts() {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { grid: { color: '#ebeef0' }, ticks: { color: '#44474e' } },
+            x: { grid: { display: false }, ticks: { color: '#44474e' } }
+        }
+    };
+}
+
+let historyLineInstance = null;
+let historyBarInstance = null;
+function renderHistoryCharts() {
+    const lineCtx = document.getElementById('historyLineChart');
+    const barCtx = document.getElementById('historyBarChart');
+    if (!lineCtx || !barCtx) return;
+    if (historyLineInstance) historyLineInstance.destroy();
+    if (historyBarInstance) historyBarInstance.destroy();
+
+    const humidityData = [55,58,52,50,47,45,42,40,44,48,51,53];
+
+    historyLineInstance = new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: hours,
+            datasets: [
+                { label: 'Temp (°C)', data: tempData, borderColor: '#1A2B4B', backgroundColor: 'rgba(26,43,75,0.15)', tension: 0.4, fill: true, pointRadius: 0, borderWidth: 3, yAxisID: 'y' },
+                { label: 'Umiditate (%)', data: humidityData, borderColor: '#00BCD4', borderDash: [4,4], tension: 0.4, fill: false, pointRadius: 0, borderWidth: 2, yAxisID: 'y1' }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { position: 'left', grid: { color: '#ebeef0' }, ticks: { color: '#44474e' } },
+                y1: { position: 'right', grid: { display: false }, ticks: { color: '#44474e' } },
+                x: { grid: { display: false }, ticks: { color: '#44474e' } }
+            }
+        }
+    });
+
+    const barColors = consumData.map(v => v > 60 ? '#031635' : v > 45 ? '#44d8f1' : '#e5e9eb');
+    historyBarInstance = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: hours,
+            datasets: [{ data: consumData, backgroundColor: barColors, borderRadius: 6 }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { display: false },
+                x: { grid: { display: false }, ticks: { color: '#44474e', font: { size: 10 } } }
+            }
+        }
+    });
+}
+
+// ===== Range tabs (Istoric page) =====
+document.querySelectorAll('.range-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.range-tab').forEach(t => {
+            t.classList.remove('bg-surface-container-lowest', 'shadow-sm', 'font-bold');
+            t.classList.add('text-on-surface-variant');
+        });
+        tab.classList.add('bg-surface-container-lowest', 'shadow-sm', 'font-bold');
+        tab.classList.remove('text-on-surface-variant');
+    });
+});
+
+// ===== Report download =====
+function downloadReport() {
+    const btn = event.currentTarget;
+    const original = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Se generează...';
+    setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> Raport gata';
+        setTimeout(() => { btn.innerHTML = original; }, 1800);
+    }, 1000);
+}
+
+// ===== Settings form =====
+document.getElementById('settings-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">refresh</span> Se salvează...';
+    btn.classList.add('opacity-80', 'pointer-events-none');
+    setTimeout(() => {
+        btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Configurație Salvată';
+        btn.classList.remove('bg-primary');
+        btn.classList.add('bg-status-eco');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-status-eco', 'opacity-80', 'pointer-events-none');
+            btn.classList.add('bg-primary');
+        }, 2000);
+    }, 1200);
+});
+document.querySelectorAll('#settings-form input').forEach(input => {
+    input.addEventListener('focus', () => input.closest('.group')?.classList.add('ring-2', 'ring-primary/10'));
+    input.addEventListener('blur', () => input.closest('.group')?.classList.remove('ring-2', 'ring-primary/10'));
+});
+
+// ===== Init =====
+showPage('dashboard');
+</script>
+</body>
+</html>

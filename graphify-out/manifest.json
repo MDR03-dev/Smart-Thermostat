@@ -1,0 +1,67 @@
+{
+  "eslint.config.js": {
+    "mtime": 1780925453.9385204,
+    "ast_hash": "3aa4b57d7f08181d86bde52a4dcb7f22",
+    "semantic_hash": "3aa4b57d7f08181d86bde52a4dcb7f22"
+  },
+  "firebase.json": {
+    "mtime": 1783076001.6849992,
+    "ast_hash": "646a279d69e23e4164c4b01f6fa2c3c9",
+    "semantic_hash": "646a279d69e23e4164c4b01f6fa2c3c9"
+  },
+  "package.json": {
+    "mtime": 1780927300.4836872,
+    "ast_hash": "1d7450fdbe139c8783299b9ced4fcfc7",
+    "semantic_hash": "1d7450fdbe139c8783299b9ced4fcfc7"
+  },
+  "skills-lock.json": {
+    "mtime": 1783464271.0047202,
+    "ast_hash": "3b2c5de8ef0b007a64ddedf123a9d157",
+    "semantic_hash": "3b2c5de8ef0b007a64ddedf123a9d157"
+  },
+  "src/App.jsx": {
+    "mtime": 1783076746.800656,
+    "ast_hash": "6317f12b0347e724735a91c3a84e76e9",
+    "semantic_hash": "6317f12b0347e724735a91c3a84e76e9"
+  },
+  "src/components/Layout.jsx": {
+    "mtime": 1783459923.6202872,
+    "ast_hash": "0e2b1ff7922393d376666d2c846b8bf1",
+    "semantic_hash": "0e2b1ff7922393d376666d2c846b8bf1"
+  },
+  "src/contexts/AuthContext.jsx": {
+    "mtime": 1783075657.9412374,
+    "ast_hash": "c2d6d58811bcd07976502adbd1474da4",
+    "semantic_hash": "c2d6d58811bcd07976502adbd1474da4"
+  },
+  "src/firebase.js": {
+    "mtime": 1783075649.1422296,
+    "ast_hash": "251268f685cd1bdd043eaa9c554955f2",
+    "semantic_hash": "251268f685cd1bdd043eaa9c554955f2"
+  },
+  "src/main.jsx": {
+    "mtime": 1780925453.9859595,
+    "ast_hash": "e13723e2574429d9a6d849727e3ff695",
+    "semantic_hash": "e13723e2574429d9a6d849727e3ff695"
+  },
+  "src/pages/Dashboard.jsx": {
+    "mtime": 1783458469.8633647,
+    "ast_hash": "d5cad82dca3afd1b50569475fbf95d52",
+    "semantic_hash": "d5cad82dca3afd1b50569475fbf95d52"
+  },
+  "src/pages/History.jsx": {
+    "mtime": 1783458523.2404797,
+    "ast_hash": "72dd9df1c48ceb73a2913b6f44f1c41f",
+    "semantic_hash": "72dd9df1c48ceb73a2913b6f44f1c41f"
+  },
+  "src/pages/Settings.jsx": {
+    "mtime": 1783458561.7683406,
+    "ast_hash": "674c9f2c4356be25249ee3109ffa36ae",
+    "semantic_hash": "674c9f2c4356be25249ee3109ffa36ae"
+  },
+  "vite.config.js": {
+    "mtime": 1780927304.650143,
+    "ast_hash": "d281d66c4390899f561fa3db9b8e9eac",
+    "semantic_hash": "d281d66c4390899f561fa3db9b8e9eac"
+  }
+}

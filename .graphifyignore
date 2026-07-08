@@ -1,0 +1,17 @@
+# Ignore agent and system directories
+.agents/
+agent/
+docs/
+dist/
+node_modules/
+public/
+.git/
+.firebase/
+.claude/
+.gemini/
+*cache
+*.png
+*.svg
+*.jpg
+*.md
+*.html

@@ -1,0 +1,6 @@
+{
+  "name": "Lumina Home",
+  "description": "Platformă integrată de control automatizat al climatizării și monitorizare a histerezisului pentru aplicații rezidențiale.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
