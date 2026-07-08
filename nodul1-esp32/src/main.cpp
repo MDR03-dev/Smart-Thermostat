@@ -37,6 +37,7 @@ const char* influx_token = "Token 44TLeCBk3T1eHUuW7uaGzwnkKSn4LWPYRFWyMatsEh1CT4
 float current_temp = 20.0;
 float target_temp = 20.0;
 float hysteresis = 0.5;
+String current_mode = "heating";
 
 bool heating_on = false;
 bool cooling_on = false;
@@ -47,17 +48,20 @@ unsigned long lastFirebasePoll = 0;
 const unsigned long FIREBASE_POLL_INTERVAL = 2000;
 
 void updateRelays() {
-  // Logica Bang-Bang cu Histerezis
-  if (current_temp < (target_temp - hysteresis / 2.0)) {
-    heating_on = true;
+  if (current_mode == "heating") {
     cooling_on = false;
-  } else if (current_temp > (target_temp + hysteresis / 2.0)) {
+    if (current_temp < (target_temp - hysteresis)) {
+      heating_on = true;
+    } else if (current_temp >= target_temp) {
+      heating_on = false;
+    }
+  } else if (current_mode == "cooling") {
     heating_on = false;
-    cooling_on = true; // Dacă se dorește și răcire automată
-  } else {
-    // În banda moartă (deadband), menținem starea anterioară pentru a preveni comutările frecvente
-    if (heating_on && current_temp >= target_temp) heating_on = false;
-    if (cooling_on && current_temp <= target_temp) cooling_on = false;
+    if (current_temp > (target_temp + hysteresis)) {
+      cooling_on = true;
+    } else if (current_temp <= target_temp) {
+      cooling_on = false;
+    }
   }
 
   // Releele sunt ACTIVE LOW (LOW = pornit, HIGH = oprit)
@@ -68,13 +72,14 @@ void updateRelays() {
 void setup() {
   Serial.begin(115200);
 
+  // Stare initiala oprita (HIGH = oprit pentru module active-low)
+  // Setam HIGH inainte de OUTPUT pentru a preveni cuplarea accidentala (palpairea) la boot
+  digitalWrite(RELAY_HEAT, HIGH);
+  digitalWrite(RELAY_COOL, HIGH);
+  
   // Initializare pini relee
   pinMode(RELAY_HEAT, OUTPUT);
   pinMode(RELAY_COOL, OUTPUT);
-  
-  // Stare initiala oprita (HIGH = oprit pentru module active-low)
-  digitalWrite(RELAY_HEAT, HIGH);
-  digitalWrite(RELAY_COOL, HIGH);
 
   // Connect to WiFi
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -94,8 +99,11 @@ void setup() {
 
 void loop() {
   // Verificare si reconectare WiFi
-  if (WiFi.status() != WL_CONNECTED) {
+  static unsigned long lastWifiCheck = 0;
+  if (WiFi.status() != WL_CONNECTED && (millis() - lastWifiCheck >= 5000)) {
+    lastWifiCheck = millis();
     Serial.println("WiFi pierdut. Reconectare...");
+    WiFi.disconnect();
     WiFi.reconnect();
   }
 
@@ -112,12 +120,25 @@ void loop() {
         target_temp = fbdo.floatData();
       }
 
+      if (Firebase.getString(fbdo, "/commands/mode")) {
+        current_mode = fbdo.stringData();
+      }
+
+      if (Firebase.getFloat(fbdo, "/config/hysteresis")) {
+        hysteresis = fbdo.floatData();
+      }
+
       // Actualizam releele în funcție de noile date
       updateRelays();
+      
+      // Debug pentru a vedea de ce nu comuta:
+      Serial.printf("Status: Mod=%s, TempCurenta=%.1f, Target=%.1f, Incalzire=%d, Racire=%d\n", 
+                    current_mode.c_str(), current_temp, target_temp, heating_on, cooling_on);
     }
   }
 
-  // Trimitere telemetrie estimata (fara INA219) catre InfluxDB
+  // Trimitere telemetrie (starea releelor) catre InfluxDB
+  // Notă: Senzorul INA219 și pinii I2C au fost dezactivați din soft
   if (millis() - lastUpdate >= UPDATE_INTERVAL) {
     lastUpdate = millis();
 
@@ -128,13 +149,21 @@ void loop() {
       http.addHeader("Content-Type", "text/plain");
 
       // Payload Line Protocol (Measurement: termostat, Tags: node=nod1)
-      // Trimitem 1 sau 0 pentru incalzire și target-ul curent
-      String payload = "termostat,node=nod1 incalzire_on=" + String(heating_on ? 1 : 0) + ",setpoint_c=" + String(target_temp);
+      // Trimitem 1 sau 0 pentru incalzire si racire, + target-ul curent
+      String payload = "termostat,node=nod1 incalzire_on=" + String(heating_on ? "1i" : "0i") + 
+                       ",racire_on=" + String(cooling_on ? "1i" : "0i") + 
+                       ",setpoint_c=" + String(target_temp);
+      
+      Serial.println("Payload: " + payload);
       
       int httpResponseCode = http.POST(payload);
       if (httpResponseCode > 0) {
         Serial.print("InfluxDB HTTP Code: ");
         Serial.println(httpResponseCode);
+        if (httpResponseCode != 204) {
+          String response = http.getString();
+          Serial.println("Response: " + response);
+        }
       } else {
         Serial.print("Eroare la trimiterea InfluxDB: ");
         Serial.println(httpResponseCode);

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Thermometer, 
   Droplets, 
@@ -41,20 +41,29 @@ export default function DashboardTab({
   const isCoolingActive = activeRoom.mode === 'cooling' && activeRoom.currentTemp > activeRoom.setpoint;
   const isDeviceOn = isHeatingActive || isCoolingActive;
 
-  const instantPower = isDeviceOn ? settings.nominalPower : 0;
+  const instantPower = isDeviceOn 
+    ? (activeRoom.mode === 'heating' ? settings.nominalPowerHeating : settings.nominalPowerCooling) 
+    : 0;
   const currentAmperes = (instantPower / 230).toFixed(2);
 
-  // Dynamic estimated monthly cost based on Tariff profile & Power
-  let baseCost = 14.50;
-  if (settings.selectedTariffProfile === 'Standard') {
-    baseCost = 18.20;
-  } else if (settings.selectedTariffProfile === 'Noapte (Redus)') {
-    baseCost = 11.10;
+  // Selector for financial analysis mode
+  const [costMode, setCostMode] = useState<'both' | 'heating' | 'cooling'>('both');
+
+  // Dynamic estimated monthly cost based on Power and Tariff
+  // Mock 'timp total' (e.g. 120 hours / month)
+  const timpTotalHeating = 120; // ore
+  const timpTotalCooling = 80;  // ore
+
+  let consumEstimat = 0; // kWh
+  if (costMode === 'both') {
+    consumEstimat = (settings.nominalPowerHeating * timpTotalHeating + settings.nominalPowerCooling * timpTotalCooling) / 1000;
+  } else if (costMode === 'heating') {
+    consumEstimat = (settings.nominalPowerHeating * timpTotalHeating) / 1000;
+  } else if (costMode === 'cooling') {
+    consumEstimat = (settings.nominalPowerCooling * timpTotalCooling) / 1000;
   }
-  
-  // Cost is estimated since we don't have real total kWh in this component yet
-  const costMultiplier = Math.max(0.6, 1 + (activeRoom.setpoint - 22.5) * 0.15);
-  const estimatedCost = (baseCost * costMultiplier).toFixed(2);
+
+  const estimatedCost = (consumEstimat * settings.energyTariff).toFixed(2);
 
   // Handler for setting temperatures
   const adjustSetpoint = (amount: number) => {
@@ -116,7 +125,7 @@ export default function DashboardTab({
           <div className="mt-2 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-status-heating animate-pulse" />
             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Ideal: {settings.lowThreshold}°C - {settings.highThreshold}°C
+              Ideal: {(activeRoom.setpoint - settings.hysteresis).toFixed(1)}°C - {(activeRoom.setpoint + settings.hysteresis).toFixed(1)}°C
             </p>
           </div>
         </div>
@@ -196,11 +205,13 @@ export default function DashboardTab({
               </div>
             </h3>
             <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
-              isDeviceOn 
+              isHeatingActive 
                 ? 'bg-status-heating/10 text-status-heating' 
+                : isCoolingActive
+                ? 'bg-status-cooling/10 text-status-cooling'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
             }`}>
-              {isDeviceOn ? 'Comandă în curs (Așteaptă ESP1)' : 'Inactiv (Standby)'}
+              {isHeatingActive ? 'Încălzire Activă' : isCoolingActive ? 'Răcire Activă' : 'Inactiv (Standby)'}
             </span>
           </div>
 
@@ -359,7 +370,20 @@ export default function DashboardTab({
 
               <div>
                 <label className="text-xs text-slate-400 font-bold block mb-1">
-                  Profil Tarifar
+                  Mod Estimare
+                </label>
+                <select 
+                  value={costMode}
+                  onChange={(e) => setCostMode(e.target.value as any)}
+                  className="w-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-none rounded-xl text-sm py-2.5 px-3 focus:ring-2 focus:ring-primary focus:outline-none cursor-pointer mb-4"
+                >
+                  <option value="both">Răcire + Încălzire</option>
+                  <option value="heating">Doar Încălzire</option>
+                  <option value="cooling">Doar Răcire</option>
+                </select>
+
+                <label className="text-xs text-slate-400 font-bold block mb-1">
+                  Profil Tarifar (Lei/kWh: {settings.energyTariff})
                 </label>
                 <select 
                   value={settings.selectedTariffProfile}

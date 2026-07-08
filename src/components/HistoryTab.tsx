@@ -55,7 +55,7 @@ export default function HistoryTab({ activeRoom }: HistoryTabProps) {
     const fluxQuery = `from(bucket: "${INFLUX_BUCKET}")
       |> range(start: ${range})
       |> filter(fn: (r) => r._measurement == "termostat")
-      |> filter(fn: (r) => r._field == "temperatura" or r._field == "umiditate" or r._field == "incalzire_on")
+      |> filter(fn: (r) => r._field == "temperatura" or r._field == "umiditate" or r._field == "incalzire_on" or r._field == "racire_on")
       |> aggregateWindow(every: ${window}, fn: mean, createEmpty: false)
       |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")`;
 
@@ -71,7 +71,7 @@ export default function HistoryTab({ activeRoom }: HistoryTabProps) {
               time: time,
               temp: parseFloat((o.temperatura || 20).toFixed(1)),
               humidity: Math.round(o.umiditate || 50),
-              consumption: parseFloat(((o.incalzire_on || 0) * 1.5).toFixed(2)) // 1.5kWh if full hour
+              consumption: parseFloat((((o.incalzire_on || 0) * 2.0) + ((o.racire_on || 0) * 1.5)).toFixed(2))
             });
           },
           error(error) {

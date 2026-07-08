@@ -27,10 +27,14 @@ export default function App() {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        return parsed.map((r: any) => ({
-          ...r,
-          scenarioSetpoints: r.scenarioSetpoints || initialRooms.find(i => i.id === r.id)?.scenarioSetpoints
-        }));
+        return parsed.map((r: any) => {
+          const defaultRoom = initialRooms.find(i => i.id === r.id);
+          return {
+            ...defaultRoom,
+            ...r,
+            scenarioSetpoints: r.scenarioSetpoints || defaultRoom?.scenarioSetpoints
+          };
+        });
       } catch (e) {
         console.error('Failed to parse lumina_rooms', e);
       }
@@ -42,7 +46,8 @@ export default function App() {
     const stored = localStorage.getItem('lumina_settings');
     if (stored) {
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        return { ...initialSettings, ...parsed };
       } catch (e) {
         console.error('Failed to parse lumina_settings', e);
       }
@@ -57,6 +62,9 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem('lumina_settings', JSON.stringify(settings));
+    if (settings.hysteresis !== undefined) {
+      set(ref(db, 'config/hysteresis'), settings.hysteresis);
+    }
   }, [settings]);
 
   // Find active room data
@@ -150,6 +158,9 @@ export default function App() {
     if (selectedRoomId === 'living-room') {
       if (updatedFields.setpoint !== undefined) {
         set(ref(db, 'commands/target_temp'), updatedFields.setpoint);
+      }
+      if (updatedFields.mode !== undefined) {
+        set(ref(db, 'commands/mode'), updatedFields.mode);
       }
       if (updatedFields.scenario !== undefined) {
         const scenarioMap: Record<string, string> = {

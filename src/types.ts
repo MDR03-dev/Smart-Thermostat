@@ -19,10 +19,10 @@ export interface RoomState {
 }
 
 export interface SystemSettings {
-  lowThreshold: number;
-  highThreshold: number;
+  hysteresis: number;
   energyTariff: number;
-  nominalPower: number;
+  nominalPowerHeating: number;
+  nominalPowerCooling: number;
   selectedTariffProfile: 'Standard' | 'Noapte (Redus)' | 'Eco Plus';
 }
 

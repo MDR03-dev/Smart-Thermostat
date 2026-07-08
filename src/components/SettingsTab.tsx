@@ -25,10 +25,10 @@ export default function SettingsTab({
   updateSettings,
 }: SettingsTabProps) {
   // Local form states to avoid sluggish keypresses
-  const [lowThreshold, setLowThreshold] = useState<number>(settings.lowThreshold);
-  const [highThreshold, setHighThreshold] = useState<number>(settings.highThreshold);
+  const [hysteresis, setHysteresis] = useState<number>(settings.hysteresis);
   const [energyTariff, setEnergyTariff] = useState<number>(settings.energyTariff);
-  const [nominalPower, setNominalPower] = useState<number>(settings.nominalPower);
+  const [nominalPowerHeating, setNominalPowerHeating] = useState<number>(settings.nominalPowerHeating);
+  const [nominalPowerCooling, setNominalPowerCooling] = useState<number>(settings.nominalPowerCooling);
   const [selectedTariff, setSelectedTariff] = useState<'Standard' | 'Noapte (Redus)' | 'Eco Plus'>(settings.selectedTariffProfile);
 
   // Visual button saving states
@@ -40,12 +40,7 @@ export default function SettingsTab({
     setErrorMsg(null);
 
     // Form logical validations
-    if (lowThreshold >= highThreshold) {
-      setErrorMsg('Pragul inferior (Pornire) trebuie să fie mai mic decât pragul superior (Oprire încălzire).');
-      return;
-    }
-
-    if (lowThreshold <= 0 || highThreshold <= 0 || energyTariff <= 0 || nominalPower <= 0) {
+    if (hysteresis <= 0 || energyTariff <= 0 || nominalPowerHeating <= 0 || nominalPowerCooling <= 0) {
       setErrorMsg('Toate valorile introduse trebuie să fie pozitive.');
       return;
     }
@@ -56,10 +51,10 @@ export default function SettingsTab({
     setTimeout(() => {
       // Save globally
       updateSettings({
-        lowThreshold,
-        highThreshold,
+        hysteresis,
         energyTariff,
-        nominalPower,
+        nominalPowerHeating,
+        nominalPowerCooling,
         selectedTariffProfile: selectedTariff,
       });
       
@@ -92,17 +87,16 @@ export default function SettingsTab({
               </div>
 
               <div className="space-y-5">
-                {/* Lower threshold */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">
-                    Prag inferior (Pornire încălzire)
+                    Valoare Histerezis
                   </label>
                   <div className="relative">
                     <input 
                       type="number" 
                       step="0.1"
-                      value={lowThreshold}
-                      onChange={(e) => setLowThreshold(parseFloat(e.target.value) || 0)}
+                      value={hysteresis}
+                      onChange={(e) => setHysteresis(parseFloat(e.target.value) || 0)}
                       className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:outline-none transition-all pr-12"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
@@ -110,29 +104,7 @@ export default function SettingsTab({
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-400 italic">
-                    Sistemul va porni automat sub această valoare.
-                  </p>
-                </div>
-
-                {/* Upper threshold */}
-                <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">
-                    Prag superior (Oprire încălzire)
-                  </label>
-                  <div className="relative">
-                    <input 
-                      type="number" 
-                      step="0.1"
-                      value={highThreshold}
-                      onChange={(e) => setHighThreshold(parseFloat(e.target.value) || 0)}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:outline-none transition-all pr-12"
-                    />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
-                      °C
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-slate-400 italic">
-                    Sistemul va opri încălzirea când atinge această valoare.
+                    Diferența de temperatură față de țintă la care sistemul comută starea.
                   </p>
                 </div>
               </div>
@@ -174,16 +146,16 @@ export default function SettingsTab({
                   </p>
                 </div>
 
-                {/* Nominal Power */}
+                {/* Nominal Power Heating */}
                 <div className="space-y-1.5">
                   <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">
-                    Putere Nominală Echipament (W)
+                    Putere Nominală Centrală (W)
                   </label>
                   <div className="relative">
                     <input 
                       type="number" 
-                      value={nominalPower}
-                      onChange={(e) => setNominalPower(parseInt(e.target.value) || 0)}
+                      value={nominalPowerHeating}
+                      onChange={(e) => setNominalPowerHeating(parseInt(e.target.value) || 0)}
                       className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-secondary focus:outline-none transition-all pr-12"
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
@@ -191,7 +163,28 @@ export default function SettingsTab({
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-400 italic">
-                    Puterea de consum maximă a sistemului de climatizare.
+                    Puterea de consum la încălzire.
+                  </p>
+                </div>
+
+                {/* Nominal Power Cooling */}
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Putere Nominală Sistem Aer Condiționat (W)
+                  </label>
+                  <div className="relative">
+                    <input 
+                      type="number" 
+                      value={nominalPowerCooling}
+                      onChange={(e) => setNominalPowerCooling(parseInt(e.target.value) || 0)}
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 text-sm font-bold text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-secondary focus:outline-none transition-all pr-12"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
+                      W
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 italic">
+                    Puterea de consum la răcire.
                   </p>
                 </div>
               </div>

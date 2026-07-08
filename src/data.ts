@@ -37,10 +37,10 @@ export const initialRooms: RoomState[] = [
 ];
 
 export const initialSettings: SystemSettings = {
-  lowThreshold: 19.5,
-  highThreshold: 22.5,
+  hysteresis: 0.5,
   energyTariff: 0.80,
-  nominalPower: 2000,
+  nominalPowerHeating: 2000,
+  nominalPowerCooling: 1500,
   selectedTariffProfile: 'Eco Plus'
 };
 
